@@ -1,0 +1,42 @@
+Users
+ -id
+ -username
+ -password
+ -status
+ -user_type
+ -created at
+ -updated at
+User details
+ -id fk uid referecnes users.id
+ -firstname
+ -lastname
+ -middlename
+ -address
+ -email
+ -contact no.
+ -company
+ -feedback
+ -rating
+ -created at
+ -updated at
+Services
+  -id
+  -service name
+  -created at
+  -update at
+Transactions
+-id
+-service_id fk sid references services.id
+-transaction_status
+-uid (Users.user_type)
+-created at
+-updated at
+Requests
+-id
+-req_id
+-status (approve/reject/pending)
+-requested_by (uid)
+-request_to(uid)
+-service name (services.id)
+-created_at
+-updated_at
