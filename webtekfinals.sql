@@ -1,8 +1,6 @@
-CREATE DATABASE  IF NOT EXISTS `webtekfinals` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `webtekfinals`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: webtekfinals
+-- Host: localhost    Database: webtefinals
 -- ------------------------------------------------------
 -- Server version	5.7.14
 
@@ -98,7 +96,7 @@ CREATE TABLE `request` (
   CONSTRAINT `requested_by` FOREIGN KEY (`requested_by`) REFERENCES `user_details` (`idUser`) ON UPDATE CASCADE,
   CONSTRAINT `requested_to` FOREIGN KEY (`requested_to`) REFERENCES `user_details` (`idUser`) ON UPDATE CASCADE,
   CONSTRAINT `service_id` FOREIGN KEY (`service_id`) REFERENCES `services` (`service_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='	';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='	';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,6 +105,7 @@ CREATE TABLE `request` (
 
 LOCK TABLES `request` WRITE;
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
+INSERT INTO `request` VALUES (1,'pending',4,6,1,'2017-01-03 16:00:00','2017-01-03 16:00:00'),(2,'pending',4,6,4,'2017-01-03 16:00:00','2017-01-03 16:00:00');
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,6 +132,7 @@ CREATE TABLE `services` (
 
 LOCK TABLES `services` WRITE;
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
+INSERT INTO `services` VALUES (1,'chupa','2017-01-03 16:00:00'),(2,'mulmol tite','2017-01-03 16:00:00'),(3,'supsop suso','2017-01-03 16:00:00'),(4,'bundok susong dalaga','2017-01-03 16:00:00');
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,8 +154,11 @@ CREATE TABLE `transaction` (
   PRIMARY KEY (`transaction_id`),
   KEY `sp_id_idx` (`sp_id`),
   KEY `cust_id_idx` (`cust_id`),
-  KEY `service_id_idx` (`service_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `service_id_idx` (`service_id`),
+  CONSTRAINT `cust_fk` FOREIGN KEY (`cust_id`) REFERENCES `user_details` (`idUser`),
+  CONSTRAINT `service_fk` FOREIGN KEY (`service_id`) REFERENCES `services` (`service_id`) ON UPDATE CASCADE,
+  CONSTRAINT `sp_fk` FOREIGN KEY (`sp_id`) REFERENCES `user_details` (`idUser`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,6 +167,7 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+INSERT INTO `transaction` VALUES (1,4,'ongoing',4,6,'2017-01-03 16:00:00','2017-01-03 16:00:00');
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,17 +180,18 @@ DROP TABLE IF EXISTS `user_details`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_details` (
   `idUser` int(11) NOT NULL,
-  `firstName` varchar(45) NOT NULL,
-  `middleName` varchar(45) DEFAULT NULL,
-  `lastName` varchar(45) NOT NULL,
-  `address` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
+  `firstName` varchar(255) NOT NULL,
+  `middleName` varchar(255) DEFAULT NULL,
+  `lastName` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `contactNumber` int(11) NOT NULL,
-  `company` varchar(45) DEFAULT NULL,
+  `company` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
   PRIMARY KEY (`idUser`),
-  UNIQUE KEY `idUser_UNIQUE` (`idUser`)
+  UNIQUE KEY `idUser_UNIQUE` (`idUser`),
+  CONSTRAINT `fk_reqid_reqslip` FOREIGN KEY (`idUser`) REFERENCES `users` (`idUsers`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -196,6 +201,7 @@ CREATE TABLE `user_details` (
 
 LOCK TABLES `user_details` WRITE;
 /*!40000 ALTER TABLE `user_details` DISABLE KEYS */;
+INSERT INTO `user_details` VALUES (4,'Galo Berlyn','Dullas','Garlejo','123 bonifaceio','test@yahoo.com',123456789,'IBM','2017-04-28 12:13:38','2017-04-28 12:13:38'),(5,'asdas','asdasdas','asdasda','aaa','asdasdas@asdasda.com',222,'aaa','2017-04-28 12:15:55','2017-04-28 12:15:55'),(6,'d','d','d','d','dd@ddd.com',222,'d','2017-04-28 12:36:17','2017-04-28 12:36:17'),(7,'sadas','sadas','sdas','sadas','asdasdas@asdasda.com',22,'','2017-04-28 12:36:40','2017-04-28 12:36:40');
 /*!40000 ALTER TABLE `user_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,15 +214,14 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `idUsers` int(11) NOT NULL AUTO_INCREMENT,
-  `UserName` varchar(45) NOT NULL,
-  `Password` varchar(45) NOT NULL,
+  `UserName` varchar(255) NOT NULL,
+  `Password` varchar(255) NOT NULL,
   `Status` enum('Active','Disabled','pending') NOT NULL DEFAULT 'pending',
   `UserType` enum('SP','customer','admin','guest') NOT NULL,
   PRIMARY KEY (`idUsers`),
   UNIQUE KEY `idUsers_UNIQUE` (`idUsers`),
-  UNIQUE KEY `UserName_UNIQUE` (`UserName`),
-  CONSTRAINT `idUsers` FOREIGN KEY (`idUsers`) REFERENCES `user_details` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `UserName_UNIQUE` (`UserName`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,6 +230,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (4,'galo','$2y$10$.VnMQXvYbrEQyM3dyRUC3.YnydaDhAO295Ki68y/XbqjoWkExYGYm','pending','SP'),(5,'galo123','$2y$10$kSvMVPukBXrwowUItl.Ne.m11pMK9R/6JFdCYJ4uM9.aKizk1vEt.','Active','admin'),(6,'dd','$2y$10$tHOuYqDqOZvDFFPxE1Jce.kkS5QWyz5ZZxPrlSZ/SDD4tayUdEXAu','pending','customer'),(7,'dasdas','$2y$10$jACl6i2Dxmtiw.NaJPxs.OOdgzY77LUmwuwa8ZRYL9FZ7WGqHlrFy','pending','SP');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -237,4 +243,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-27 10:57:02
+-- Dump completed on 2017-05-02 17:06:46
