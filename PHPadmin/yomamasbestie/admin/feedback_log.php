@@ -1,4 +1,4 @@
-<?php
+ <?php
 include '../shared/connection.php';
 include '../shared/auth.php';
 if (isset($_POST['searchUser'])) {
@@ -12,6 +12,7 @@ if (isset($_POST['searchUser'])) {
 	<title>Feedbacks</title>
 </head>
 <body>
+<a href="../home.php">Home</a>
 <h1> Feedbacks </h1>
 <form method="POST">
 	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
@@ -49,6 +50,6 @@ if (isset($_POST['searchUser'])) {
 
 	?>
 </table>
-<a href="../home.php">Home</a>
+
 </body>
 </html>

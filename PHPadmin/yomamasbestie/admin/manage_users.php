@@ -13,6 +13,8 @@ if (isset($_POST['searchUser'])) {
 </head>
 <body>
 <h1> Manage Users </h1>
+<a href="../home.php">Home</a>
+<a href='logout.php' style = 'float: right;'> Logout </a>
 <form method="POST">
 	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
 	<input type="submit" name="searchButton" value="Search">
@@ -49,8 +51,8 @@ if (isset($_POST['searchUser'])) {
 			echo "<td>" . $user_arr['contactnumber'] . "</td>";
 			echo "<td>" . $user_arr['company'] . "</td>";
 	        echo "<form method='POST' action='manage_users.php'>";
-	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button></td>";
-	        echo "<td><button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Disable</button></td>";
+	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
+	        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Disable</button></td>";
 			echo "</form>";
 		}
 		echo "</tr>";
@@ -73,8 +75,8 @@ if (isset($_POST['searchUser'])) {
 			echo "<td>" . $user_arr['contactnumber'] . "</td>";
 			echo "<td>" . $user_arr['company'] . "</td>";
 	        echo "<form method='POST' action='manage_users.php'>";
-	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button></td>";
-	        echo "<td><button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Disable</button></td>";
+	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
+	        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Disable</button></td>";
 			echo "</form>";
 		}
 		echo "</tr>";
@@ -96,13 +98,13 @@ if (isset($_POST['searchUser'])) {
             }
             if(isset($_POST['disable'])){
                 $idDisable = $_POST['disable'];
-                $disableQuery = "UPDATE users SET Status = 'Disabled' WHERE idUsers = '$idDisable' and status = 'Active'";
+                $disableQuery = "UPDATE users SET Status = 'Disabled' WHERE idUsers = '$idDisable'";
                 if(mysqli_query($conn, $disableQuery)){
                     header("Location: manage_users.php");
                 }
             }
 
 ?>
-<a href="../home.php">Home</a>
+
 </body>
 </html>
