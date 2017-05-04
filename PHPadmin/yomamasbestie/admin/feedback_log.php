@@ -5,12 +5,6 @@ if (isset($_POST['searchUser'])) {
 	$searchUser = $_POST['searchUser'];
 }
 
-$sender="create or replace view recipient as
-SELECT recepient, CONCAT(firstname, middlename, lastname) AS recName from feedback NATURAL JOIN user_details where idUser= recepient";
-$butu="create or replace view sender as SELECT sender, CONCAT(firstname, middlename, lastname) AS senderName from feedback NATURAL JOIN user_details where idUser=sender";
-
-$senderQ = mysqli_query($conn, $sender) ;
-$recepientQ = mysqli_query($conn, $butu);
 			
 ?>
 <!DOCTYPE html>
@@ -43,13 +37,17 @@ $recepientQ = mysqli_query($conn, $butu);
 		echo "</tr>";
 
 	}else{
-		$feedbacks = "Select recName, senderName, content from feedback inner join recipient  on  feedback.recepient=recipient.recepient inner JOIN Sender on feedback.sender=sender.sender";
+		$feedbacks = "Select content, CONCAT(firstname, middlename, lastname) AS senderName from feedback natural join user_details where idUser = sender";
+		$feedbacks2 = "Select content, CONCAT(firstname, middlename, lastname) AS recName from feedback natural join user_details where idUser = recepient";
 		$feedbacksQ = mysqli_query($conn, $feedbacks) or die(mysqli_error($conn));
+		$feedbacksQ2 = mysqli_query($conn, $feedbacks2) or die(mysqli_error($conn));
+
 		while($row = mysqli_fetch_array($feedbacksQ)){
-						var_dump($row);
+			$row2 = mysqli_fetch_array($feedbacksQ2);
 			echo "<tr><td>" . $row['senderName'] . "</td>";
-			echo "<td>" . $row['recName'] . "</td>";
-			echo "<td>" . $row['content'] . "</td>";
+					echo "<td>" . $row2['recName'] . "</td>";
+					echo "<td>" . $row2['content'] . "</td>";
+
 		}
 		echo "</tr>";
 
