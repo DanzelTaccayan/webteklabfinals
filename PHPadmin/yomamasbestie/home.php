@@ -15,7 +15,8 @@ $transactionQry = mysqli_query($conn,$transaction) or die(mysqli_error($conn));
 <nav>
   <a href="home.php">Home</a> |
   <a href="./admin/manage_users.php"> Manage registration request</a> |
-  <a href="./admin/feedback_log.php"> View feedbacks </a>
+  <a href="./admin/feedback_log.php"> View feedbacks </a> |
+  <a href="./admin/viewRequests.php"> View Requests </a>
 </nav><br>
 <table border='1'>
 <tr>

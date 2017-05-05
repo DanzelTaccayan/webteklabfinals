@@ -1,0 +1,42 @@
+body{
+    background: url(../img/44.jpg);
+}
+
+legend{
+    color:black;
+}
+
+.placing{
+    margin-left:30%;
+    margin-top:2%;
+     color:black;
+}
+.col-lg-2, .control-label{
+    padding-left: 0px;
+     color:black;
+   
+}
+
+.col-lg-10{
+    color:black;
+      width: 60%;
+ 
+}
+.form-group input{
+    color: black;
+    background-color: #D3D3D3;
+}
+
+/*
+.col-lg-10, .col-lg-offset-2{
+    padding-left: 10%;
+}
+*/
+.form-group label{
+   width: 40%;
+}
+
+
+
+
+
