@@ -27,9 +27,9 @@ include '../shared/auth.php';
 <?php
 	
 		$query = "Select * from request";
-		$serviceQuery = "Select service_name from request natural join services";
-		$reqByQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqBy from user_details join request where idUser = requested_by";
-		$reqToQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqTo from user_details join request where idUser = requested_to";
+		$serviceQuery = "Select service_name from request natural join services order by request_date";
+		$reqByQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqBy from user_details join request where idUser = requested_by ORDER BY request_date";
+		$reqToQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqTo from user_details join request where idUser = requested_to ORDER BY request_date";
 
 		$resultQ = mysqli_query($conn, $query) or die(mysqli_error($conn));
 		$resultServiceQ = mysqli_query($conn, $serviceQuery) or die(mysqli_error($conn));
@@ -48,8 +48,6 @@ include '../shared/auth.php';
 					echo "<td>" . $serviceRow['service_name'] . "</td>";
 					echo "<td>" . $row['request_date'] . "</td>";
 					echo "<td>" . $row['updated_at'] . "</td>";
-
-
 		}
 		echo "</tr>";
 
