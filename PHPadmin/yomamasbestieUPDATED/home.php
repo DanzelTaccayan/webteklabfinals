@@ -35,7 +35,6 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 			$nameSp = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$sp_num'";
 			$nameSp_result = mysqli_query($conn, $nameSp) or die(mysqli_error($conn));
 			$sp_arr = mysqli_fetch_array($nameSp_result);
-			var_dump($sp_arr);
 			//customer
 			$cust_num = $transaction_arr['cust_id'];
 			$nameCust = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$cust_num'";
@@ -46,7 +45,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 			echo "<tr><td>" . $sp_arr['name'] . "</td>";
 			echo "<td>" . $cust_arr['name'] . "</td>";
 			echo "<td>" . $transaction_arr['transaction_status'] . "</td>";
-			echo "<td><a href='#walapa'> View Details </a></td></tr>";
+			echo "<td><a href='view_transaction.php?transaction_id=". $transaction_arr['transaction_id'] . "'>View Details </a></tr>";
 		}
 	?>
 
