@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
--- https://www.phpmyadmin.net/
+-- version 4.5.5.1
+-- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2017 at 03:01 PM
--- Server version: 5.7.14
--- PHP Version: 5.6.25
+-- Generation Time: May 10, 2017 at 01:56 PM
+-- Server version: 5.7.11
+-- PHP Version: 5.6.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -58,11 +58,28 @@ CREATE TABLE `rating` (
   `rating` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `rating`
+--
+
+INSERT INTO `rating` (`rating_id`, `evaluator`, `evaluatee`, `rating`) VALUES
+(1, 4, 5, 4),
+(2, 6, 5, 5),
+(3, 7, 5, 3),
+(4, 5, 6, 4),
+(5, 4, 6, 2),
+(6, 4, 7, 5),
+(7, 5, 7, 2),
+(8, 4, 8, 5),
+(9, 5, 8, 4),
+(10, 4, 9, 5),
+(11, 5, 9, 4),
+(12, 6, 9, 1);
+
 -- --------------------------------------------------------
 
 --
 -- Stand-in structure for view `recipient`
--- (See below for the actual view)
 --
 CREATE TABLE `recipient` (
 `recepient` int(11)
@@ -90,14 +107,13 @@ CREATE TABLE `request` (
 --
 
 INSERT INTO `request` (`idrequest`, `status`, `requested_by`, `requested_to`, `service_id`, `request_date`, `updated_at`) VALUES
-(1, 'pending', 4, 6, 1, '2017-01-03 16:00:00', '2017-01-03 16:00:00'),
-(2, 'pending', 4, 6, 4, '2017-01-03 16:00:00', '2017-01-03 16:00:00');
+(1, 'pending', 5, 6, 1, '2017-01-03 16:00:00', '2017-01-03 16:00:00'),
+(2, 'pending', 4, 6, 4, '2017-01-03 17:00:00', '2017-01-03 16:00:00');
 
 -- --------------------------------------------------------
 
 --
 -- Stand-in structure for view `sender`
--- (See below for the actual view)
 --
 CREATE TABLE `sender` (
 `sender` int(11)
@@ -113,9 +129,30 @@ CREATE TABLE `sender` (
 CREATE TABLE `services` (
   `service_id` int(11) NOT NULL,
   `service_name` varchar(45) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `sprovider_id` int(11) NOT NULL COMMENT 'sp.id'
+  `created_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `services`
+--
+
+INSERT INTO `services` (`service_id`, `service_name`, `created_at`) VALUES
+(1, 'chupa', '2017-01-03 16:00:00'),
+(2, 'mulmol tite', '2017-01-03 16:00:00'),
+(3, 'supsop suso', '2017-01-03 16:00:00'),
+(4, 'bundok susong dalaga', '2017-01-03 16:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `servicesp`
+--
+
+CREATE TABLE `servicesp` (
+  `idServiceSp` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `sp_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -163,7 +200,8 @@ INSERT INTO `users` (`idUsers`, `UserName`, `Password`, `Status`, `UserType`) VA
 (5, 'galo123', '$2y$10$kSvMVPukBXrwowUItl.Ne.m11pMK9R/6JFdCYJ4uM9.aKizk1vEt.', 'Active', 'admin'),
 (6, 'dd', '$2y$10$tHOuYqDqOZvDFFPxE1Jce.kkS5QWyz5ZZxPrlSZ/SDD4tayUdEXAu', 'Disabled', 'customer'),
 (7, 'dasdas', '$2y$10$jACl6i2Dxmtiw.NaJPxs.OOdgzY77LUmwuwa8ZRYL9FZ7WGqHlrFy', 'Active', 'SP'),
-(8, 'burat', '$2y$10$Rj1fSB88l.ZCXDRkak2nkucU9P6CU4v34DbAbypb/mzbfTrM.fObq', 'Active', 'SP');
+(8, 'burat', '$2y$10$Rj1fSB88l.ZCXDRkak2nkucU9P6CU4v34DbAbypb/mzbfTrM.fObq', 'Active', 'SP'),
+(9, 'yuki', '$2y$10$gx/AZWXciIUVd/rnxtBQLevlHPrWEHUyaPl3cMcrHuqoFumud1z1u', 'pending', 'SP');
 
 -- --------------------------------------------------------
 
@@ -181,19 +219,21 @@ CREATE TABLE `user_details` (
   `contactNumber` int(11) NOT NULL,
   `company` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL
+  `updated_at` timestamp NOT NULL,
+  `UserType` enum('SP','customer','admin','guest') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user_details`
 --
 
-INSERT INTO `user_details` (`idUser`, `firstName`, `middleName`, `lastName`, `address`, `email`, `contactNumber`, `company`, `created_at`, `updated_at`) VALUES
-(4, 'Galo Berlyn', 'Dullas', 'Garlejo', '123 bonifaceio', 'test@yahoo.com', 123456789, 'IBM', '2017-04-28 12:13:38', '2017-04-28 12:13:38'),
-(5, 'asdas', 'asdasdas', 'asdasda', 'aaa', 'asdasdas@asdasda.com', 222, 'aaa', '2017-04-28 12:15:55', '2017-04-28 12:15:55'),
-(6, 'd', 'd', 'd', 'd', 'dd@ddd.com', 222, 'd', '2017-04-28 12:36:17', '2017-04-28 12:36:17'),
-(7, 'sadas', 'sadas', 'sdas', 'sadas', 'asdasdas@asdasda.com', 22, '', '2017-04-28 12:36:40', '2017-04-28 12:36:40'),
-(8, 'Kobe', 'wv', 'Miguel', 'qwf', '2153820@slu.edu.ph', 32131, 'BOTAS', '2017-05-04 03:49:20', '2017-05-04 03:49:20');
+INSERT INTO `user_details` (`idUser`, `firstName`, `middleName`, `lastName`, `address`, `email`, `contactNumber`, `company`, `created_at`, `updated_at`, `UserType`) VALUES
+(4, 'Galo Berlyn', 'Dullas', 'Garlejo', '123 bonifaceio', 'test@yahoo.com', 123456789, 'IBM', '2017-04-28 12:13:38', '2017-04-28 12:13:38', 'admin'),
+(5, 'asdas', 'asdasdas', 'asdasda', 'aaa', 'asdasdas@asdasda.com', 222, 'aaa', '2017-04-28 12:15:55', '2017-04-28 12:15:55', 'customer'),
+(6, 'd', 'd', 'd', 'd', 'dd@ddd.com', 222, 'd', '2017-04-28 12:36:17', '2017-04-28 12:36:17', 'SP'),
+(7, 'sadas', 'sadas', 'sdas', 'sadas', 'asdasdas@asdasda.com', 22, '', '2017-04-28 12:36:40', '2017-04-28 12:36:40', 'customer'),
+(8, 'Kobe', 'wv', 'Miguel', 'qwf', '2153820@slu.edu.ph', 32131, 'BOTAS', '2017-05-04 03:49:20', '2017-05-04 03:49:20', 'SP'),
+(9, 'Yuki', 'Pogi', 'Marfil', 'jan sa gilid', 'yukipogi@gmail.com', 98457847, 'Apple', '2017-05-08 03:49:20', '2017-05-08 04:49:20', 'SP');
 
 -- --------------------------------------------------------
 
@@ -249,8 +289,16 @@ ALTER TABLE `request`
 ALTER TABLE `services`
   ADD PRIMARY KEY (`service_id`),
   ADD UNIQUE KEY `service_id_UNIQUE` (`service_id`),
-  ADD UNIQUE KEY `service_name_UNIQUE` (`service_name`),
-  ADD KEY `sp_id` (`sprovider_id`);
+  ADD UNIQUE KEY `service_name_UNIQUE` (`service_name`);
+
+--
+-- Indexes for table `servicesp`
+--
+ALTER TABLE `servicesp`
+  ADD PRIMARY KEY (`idServiceSp`),
+  ADD UNIQUE KEY `idServiceSp_UNIQUE` (`idServiceSp`),
+  ADD KEY `fk_service_idx` (`service_id`),
+  ADD KEY `fk_sp_idx` (`sp_id`);
 
 --
 -- Indexes for table `transaction`
@@ -289,12 +337,17 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `rating`
 --
 ALTER TABLE `rating`
-  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
   MODIFY `idrequest` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `servicesp`
+--
+ALTER TABLE `servicesp`
+  MODIFY `idServiceSp` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `transaction`
 --
@@ -304,7 +357,7 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `idUsers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `idUsers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- Constraints for dumped tables
 --
@@ -330,12 +383,6 @@ ALTER TABLE `request`
   ADD CONSTRAINT `requested_by` FOREIGN KEY (`requested_by`) REFERENCES `user_details` (`idUser`) ON UPDATE CASCADE,
   ADD CONSTRAINT `requested_to` FOREIGN KEY (`requested_to`) REFERENCES `user_details` (`idUser`) ON UPDATE CASCADE,
   ADD CONSTRAINT `service_id` FOREIGN KEY (`service_id`) REFERENCES `services` (`service_id`) ON UPDATE CASCADE;
-
---
--- Constraints for table `services`
---
-ALTER TABLE `services`
-  ADD CONSTRAINT `service_fk_sp` FOREIGN KEY (`sprovider_id`) REFERENCES `user_details` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `transaction`
