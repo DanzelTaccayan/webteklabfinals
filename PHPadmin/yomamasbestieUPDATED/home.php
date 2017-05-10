@@ -50,8 +50,45 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 	?>
 
 </table>
+<hr>
+<h1>Ratings</h1>
 
+<?php 
+$spRating = "SELECT CONCAT(lastName,', ', firstName,' ', middleName) as evaluatee, AVG(rating) as rating from user_details join rating where idUser = evaluatee and UserType = 'SP' group by evaluatee ORDER BY 2 DESC";
+$result = mysqli_query($conn, $spRating);
+?>
+<h2>Top Service Providers</h2>
+<table>
+	<tr>
+		<th>Service Provider</th>
+		<th>Rating</th>
+	</tr>
+<?php
 
+	while ($row = mysqli_fetch_array($result)) {
+		echo "<tr><td>" . $row['evaluatee'] . "</td>";
+		echo "<td>" . $row['rating'] . "</td></tr>";
+	}
 
+echo "</table>";
+
+$custRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) as evaluatee, AVG(rating) as rating from user_details join rating where idUser = evaluatee and UserType = 'customer' group by evaluatee ORDER BY 2 DESC";
+$result = mysqli_query($conn, $custRating);
+?>
+<h2>Top Customers</h2>
+<table>
+	<tr>
+		<th>Customers</th>
+		<th>Rating</th>
+	</tr>
+<?php
+
+	while ($row = mysqli_fetch_array($result)) {
+		echo "<tr><td>" . $row['evaluatee'] . "</td>";
+		echo "<td>" . $row['rating'] . "</td></tr>";
+	}
+
+	echo "</table>";
+?>
 </body>
 </html>
