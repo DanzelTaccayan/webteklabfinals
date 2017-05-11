@@ -26,7 +26,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 <h1>Ratings</h1>
 
 <?php 
-$spRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) AS evaluatee, AVG(rating) as rating FROM webtekfinals.user_details ud JOIN rating r ON ud.idUser = r.evaluatee WHERE UserType = 'SP' GROUP BY idUser ORDER BY 2 desc limit 10";
+$spRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) AS evaluatee, AVG(rating) as rating FROM webtekfinals.user_details ud JOIN rating r ON ud.idUser = r.evaluatee WHERE UserType = 'SP' GROUP BY idUser ORDER BY 1 desc limit 10";
 $result = mysqli_query($conn, $spRating);
 ?>
 <h2>Top Service Providers</h2>
@@ -44,7 +44,7 @@ $result = mysqli_query($conn, $spRating);
 
 echo "</table>";
 
-$custRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) AS evaluatee, AVG(rating) as rating FROM webtekfinals.user_details ud JOIN rating r ON ud.idUser = r.evaluatee WHERE UserType = 'customer' GROUP BY idUser ORDER BY rating desc limit 10";
+$custRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) AS evaluatee, AVG(rating) as rating FROM webtekfinals.user_details ud JOIN rating r ON ud.idUser = r.evaluatee WHERE UserType = 'customer' GROUP BY idUser ORDER BY 2 desc limit 10";
 $result = mysqli_query($conn, $custRating);
 ?>
 <h2>Top Customers</h2>
@@ -61,6 +61,44 @@ $result = mysqli_query($conn, $custRating);
 	}
 
 	echo "</table>";
+
+$totalUser = "SELECT count(idUser) as TotalUsers from user_details;";
+$totalUserQ = mysqli_query($conn, $totalUser);
 ?>
+<h2>Total user</h2>
+
+<?php 
+	$totalUserResult = mysqli_fetch_array($totalUserQ);
+	echo $totalUserResult['TotalUsers'];
+
+$totalSp = "SELECT count(idUser) as TotalSp from user_details where UserType='SP';";
+$totalSpQ = mysqli_query($conn, $totalSp);
+?>
+<h2>Total Service Provider</h2>
+
+<?php 
+	$totalSpResult = mysqli_fetch_array($totalSpQ);
+	echo $totalSpResult['TotalSp'];
+
+	//Total Customer
+	$totalCust = "SELECT count(idUser) as totalCust from user_details where UserType='customer';";
+	$totalCustQ = mysqli_query($conn, $totalCust);
+
+	echo "<h2>Total Customer</h2>";
+
+	$totalCustResult = mysqli_fetch_array($totalCustQ);
+	echo $totalCustResult['totalCust'];
+
+	//Total Ongoing transaction
+	$totalOngoing = "SELECT count(transaction_id) as totalOngo from transaction where transaction_status='ongoing';";
+	$totalOngoingQ = mysqli_query($conn, $totalOngoing);
+
+	echo "<h2>Ongoing Transaction</h2>";
+
+	$totalOngoingResult = mysqli_fetch_array($totalOngoingQ);
+	echo $totalOngoingResult['totalOngo'];
+
+?>
+
 </body>
 </html>
