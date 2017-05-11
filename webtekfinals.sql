@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2017 at 01:56 PM
+-- Generation Time: May 11, 2017 at 02:03 PM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -38,12 +38,12 @@ CREATE TABLE `feedback` (
 --
 
 INSERT INTO `feedback` (`sender`, `recepient`, `content`, `feedback_id`) VALUES
-(7, 8, 'ULUL', 3),
-(8, 5, 'FUCK YOU', 4),
-(4, 6, 'MAITITM KA', 5),
-(4, 6, 'ANO TO?', 6),
-(8, 4, 'BASURA', 7),
-(4, 5, 'TANGA ', 8);
+(6, 8, 'ULUL', 3),
+(6, 4, 'PANGET WALANG KWENTA', 4),
+(6, 9, 'MAITITM KA', 5),
+(6, 7, 'ANO TO?', 6),
+(8, 9, 'BASURA', 7),
+(4, 4, 'VERY VERy BAAAAD', 8);
 
 -- --------------------------------------------------------
 
@@ -98,8 +98,8 @@ CREATE TABLE `request` (
   `requested_by` int(11) NOT NULL,
   `requested_to` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
-  `request_date` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL
+  `request_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='	';
 
 --
@@ -107,8 +107,9 @@ CREATE TABLE `request` (
 --
 
 INSERT INTO `request` (`idrequest`, `status`, `requested_by`, `requested_to`, `service_id`, `request_date`, `updated_at`) VALUES
-(1, 'pending', 5, 6, 1, '2017-01-03 16:00:00', '2017-01-03 16:00:00'),
-(2, 'pending', 4, 6, 4, '2017-01-03 17:00:00', '2017-01-03 16:00:00');
+(1, 'pending', 6, 7, 8, '2017-05-10 16:13:08', '2017-01-03 16:00:00'),
+(2, 'pending', 6, 4, 4, '2017-05-10 16:02:16', '2017-01-03 16:00:00'),
+(3, 'pending', 6, 8, 9, '2017-05-10 16:15:05', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -128,8 +129,8 @@ CREATE TABLE `sender` (
 
 CREATE TABLE `services` (
   `service_id` int(11) NOT NULL,
-  `service_name` varchar(45) NOT NULL,
-  `created_at` timestamp NOT NULL
+  `service_name` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -137,10 +138,10 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`service_id`, `service_name`, `created_at`) VALUES
-(1, 'chupa', '2017-01-03 16:00:00'),
-(2, 'mulmol tite', '2017-01-03 16:00:00'),
-(3, 'supsop suso', '2017-01-03 16:00:00'),
-(4, 'bundok susong dalaga', '2017-01-03 16:00:00');
+(4, 'bundok susong dalaga', '2017-01-03 16:00:00'),
+(7, 'chupa', '2017-05-10 15:20:36'),
+(8, 'mulmol tite', '2017-05-10 15:20:40'),
+(9, 'supsop suso', '2017-05-10 15:20:44');
 
 -- --------------------------------------------------------
 
@@ -166,8 +167,8 @@ CREATE TABLE `transaction` (
   `transaction_status` enum('ongoing','done') DEFAULT 'ongoing',
   `sp_id` int(11) NOT NULL,
   `cust_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -175,7 +176,9 @@ CREATE TABLE `transaction` (
 --
 
 INSERT INTO `transaction` (`transaction_id`, `service_id`, `transaction_status`, `sp_id`, `cust_id`, `created_at`, `updated_at`) VALUES
-(1, 4, 'ongoing', 4, 6, '2017-01-03 16:00:00', '2017-01-03 16:00:00');
+(1, 4, 'ongoing', 4, 6, '2017-01-03 16:00:00', '2017-01-03 16:00:00'),
+(2, 9, 'done', 7, 6, '2017-05-10 16:08:37', '0000-00-00 00:00:00'),
+(3, 8, 'ongoing', 8, 6, '2017-05-10 16:08:37', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -187,21 +190,20 @@ CREATE TABLE `users` (
   `idUsers` int(11) NOT NULL,
   `UserName` varchar(255) NOT NULL,
   `Password` varchar(255) NOT NULL,
-  `Status` enum('Active','Disabled','pending') NOT NULL DEFAULT 'pending',
-  `UserType` enum('SP','customer','admin','guest') NOT NULL
+  `Status` enum('Active','Disabled','pending') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`idUsers`, `UserName`, `Password`, `Status`, `UserType`) VALUES
-(4, 'galo', '$2y$10$.VnMQXvYbrEQyM3dyRUC3.YnydaDhAO295Ki68y/XbqjoWkExYGYm', 'Active', 'SP'),
-(5, 'galo123', '$2y$10$kSvMVPukBXrwowUItl.Ne.m11pMK9R/6JFdCYJ4uM9.aKizk1vEt.', 'Active', 'admin'),
-(6, 'dd', '$2y$10$tHOuYqDqOZvDFFPxE1Jce.kkS5QWyz5ZZxPrlSZ/SDD4tayUdEXAu', 'Disabled', 'customer'),
-(7, 'dasdas', '$2y$10$jACl6i2Dxmtiw.NaJPxs.OOdgzY77LUmwuwa8ZRYL9FZ7WGqHlrFy', 'Active', 'SP'),
-(8, 'burat', '$2y$10$Rj1fSB88l.ZCXDRkak2nkucU9P6CU4v34DbAbypb/mzbfTrM.fObq', 'Active', 'SP'),
-(9, 'yuki', '$2y$10$gx/AZWXciIUVd/rnxtBQLevlHPrWEHUyaPl3cMcrHuqoFumud1z1u', 'pending', 'SP');
+INSERT INTO `users` (`idUsers`, `UserName`, `Password`, `Status`) VALUES
+(4, 'galo', '$2y$10$.VnMQXvYbrEQyM3dyRUC3.YnydaDhAO295Ki68y/XbqjoWkExYGYm', 'Active'),
+(5, 'galo123', '$2y$10$kSvMVPukBXrwowUItl.Ne.m11pMK9R/6JFdCYJ4uM9.aKizk1vEt.', 'Active'),
+(6, 'etheldawn', 'wooden', 'Active'),
+(7, 'dasdas', '$2y$10$jACl6i2Dxmtiw.NaJPxs.OOdgzY77LUmwuwa8ZRYL9FZ7WGqHlrFy', 'Active'),
+(8, 'burat', '$2y$10$Rj1fSB88l.ZCXDRkak2nkucU9P6CU4v34DbAbypb/mzbfTrM.fObq', 'Active'),
+(9, 'yuki', '$2y$10$gx/AZWXciIUVd/rnxtBQLevlHPrWEHUyaPl3cMcrHuqoFumud1z1u', 'pending');
 
 -- --------------------------------------------------------
 
@@ -218,8 +220,8 @@ CREATE TABLE `user_details` (
   `email` varchar(255) NOT NULL,
   `contactNumber` int(11) NOT NULL,
   `company` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `UserType` enum('SP','customer','admin','guest') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -228,10 +230,10 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`idUser`, `firstName`, `middleName`, `lastName`, `address`, `email`, `contactNumber`, `company`, `created_at`, `updated_at`, `UserType`) VALUES
-(4, 'Galo Berlyn', 'Dullas', 'Garlejo', '123 bonifaceio', 'test@yahoo.com', 123456789, 'IBM', '2017-04-28 12:13:38', '2017-04-28 12:13:38', 'admin'),
-(5, 'asdas', 'asdasdas', 'asdasda', 'aaa', 'asdasdas@asdasda.com', 222, 'aaa', '2017-04-28 12:15:55', '2017-04-28 12:15:55', 'customer'),
-(6, 'd', 'd', 'd', 'd', 'dd@ddd.com', 222, 'd', '2017-04-28 12:36:17', '2017-04-28 12:36:17', 'SP'),
-(7, 'sadas', 'sadas', 'sdas', 'sadas', 'asdasdas@asdasda.com', 22, '', '2017-04-28 12:36:40', '2017-04-28 12:36:40', 'customer'),
+(4, 'Galo Berlyn', 'Dullas', 'Garlejo', '123 bonifaceio', 'test@yahoo.com', 123456789, 'IBM', '2017-05-10 15:12:13', '2017-04-28 12:13:38', 'SP'),
+(5, 'asdas', 'asdasdas', 'asdasda', 'aaa', 'asdasdas@asdasda.com', 222, 'aaa', '2017-05-10 15:12:40', '2017-04-28 12:15:55', 'admin'),
+(6, 'Ethel Dawn', 'Tufay', 'Mejala', 'Camp Dangwa, La Trinidad, Benguet', 'mademoiselle@gmail.com', 222, 'd', '2017-05-10 15:12:47', '2017-04-28 12:36:17', 'customer'),
+(7, 'sadas', 'sadas', 'sdas', 'sadas', 'asdasdas@asdasda.com', 22, '', '2017-05-10 15:12:24', '2017-04-28 12:36:40', 'SP'),
 (8, 'Kobe', 'wv', 'Miguel', 'qwf', '2153820@slu.edu.ph', 32131, 'BOTAS', '2017-05-04 03:49:20', '2017-05-04 03:49:20', 'SP'),
 (9, 'Yuki', 'Pogi', 'Marfil', 'jan sa gilid', 'yukipogi@gmail.com', 98457847, 'Apple', '2017-05-08 03:49:20', '2017-05-08 04:49:20', 'SP');
 
@@ -342,7 +344,7 @@ ALTER TABLE `rating`
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `idrequest` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idrequest` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `servicesp`
 --
@@ -352,7 +354,7 @@ ALTER TABLE `servicesp`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `users`
 --
