@@ -6,8 +6,8 @@
             
                 $username = $_POST['username'];
                 $password = $_POST['password'];
-                $use = "SELECT username,password,status,UserType FROM users where username = '$username'";
-                $result = mysqli_query($conn, $use);                
+                $use = "SELECT username,password,status,UserType FROM users inner join user_details on users.idUsers = user_details.idUser where username = '$username'";
+                $result = mysqli_query($conn, $use) or die(mysqli_error($conn));                
                 
                 $userow = mysqli_fetch_array($result);
 

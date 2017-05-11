@@ -4,7 +4,6 @@ include '../shared/auth.php';
 if (isset($_POST['searchUser'])) {
 	$searchUser = $_POST['searchUser'];
 }
-
 			
 ?>
 <!DOCTYPE html>

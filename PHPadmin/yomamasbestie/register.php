@@ -34,22 +34,7 @@
 	<title>Register Account</title>
 </head>
 <body>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Register Account</title>
-	 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-      <link href="css/style.css" rel="stylesheet" type="text/css" />    
-   
-    <link href="css/font-awesome.css" rel="stylesheet" type="text/css" />
-     <link href="css/placing.css" rel="stylesheet" type="text/css" />
- 
-</head>
-<body>
-<!-- <div class="form-group">
-	 <div class="input-group">
 <form action='register.php' method='POST'>
-	 <span class="input-group-addon"><span class="glyphicon glyphicon-pencil"></span></span>
 	Username: <input type='text' name='username' required><br>
 	Password: <input type='password' name='password' required><br>
 	User Type: <select name='user_type' required>
@@ -66,105 +51,6 @@
 	<input type='submit' name='register' value='Create Account'>
 
 </form>
-	</div>
-</div> -->
- <div class="placing">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div class="registrationform">
-            <form method="POST" class="form-horizontal">
-                <fieldset>
-                    <legend>Registration Form <i class="fa fa-pencil pull-right"></i></legend>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Username</label>
-                        <div class="col-lg-10">
-                            <input type='text' class="form-control" name='username' required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                        Password</label>
-                        <div class="col-lg-10">
-                            <input type="password" class="form-control" name="password" required>
-                        </div>
-                    </div>
-				
-                    User Type:
-                     <select name='user_type' required>
-					<option value='SP'> Service Provider </option>
-					<option value='customer'> Customer </option>
-					</select>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Firstname</label>
-                        <div class="col-lg-10">
-                            <input type="firstname" class="form-control" name="firstname" required>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Middle Name</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" name="middlename" required>
-                        </div>
-                    </div>
-
-                    
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Lastname</label>
-                        <div class="col-lg-10">
-                            <input type="lastname" class="form-control" name="lastname" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Email</label>
-                        <div class="col-lg-10">
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                    </div>
-
-                     <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Address</label>
-                        <div class="col-lg-10">
-                            <input type="address" class="form-control" name="address" required>
-                        </div>
-                     </div>
-
-                      <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Contact Number</label>
-                        <div class="col-lg-10">
-                            <input type="number" class="form-control" name="contact_no" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">
-                            Company</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" name="company">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="col-lg-10 col-lg-offset-2">
-                            <button type="reset" class="btn btn-warning">
-                                Clear</button>
-                            <button type='submit'  class="btn btn-warning" name='register' value='Create Account'>Register</button>
-                                
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-         </div>
-
-
-            </div>
-         </div>
-       </body>
+</body>
 </html>

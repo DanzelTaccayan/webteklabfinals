@@ -90,12 +90,15 @@ img
 
 .registrationform
 {
-    padding: 40px;
-    background: #dcdee2;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.3);
     color: #FFF !important;
 }
 
-
+input, textarea{
+    
+    color: #FFF;
+}
 .control-label
 {
     color: #FFFFFF;
