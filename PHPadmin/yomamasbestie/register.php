@@ -23,7 +23,15 @@
 			$id = mysqli_insert_id($conn);
 			$register_details = "INSERT into user_details (idUser, firstName, middleName, lastName, address, email, contactNumber, company, created_at,updated_at) VALUES ('$id', '$firstname', '$middlename', '$lastname', '$address', '$email', '$contact_no', '$company', now(), now())";
 			$register_details_qry = mysqli_query($conn, $register_details);
+			//notification
+			$admin_query = "SELECT UserType, idUser from user_details where UserType='admin'";
+			$admin_query_result = mysqli_query($conn, $admin_query) or die(mysqli_error($conn));
+			$admin_arr = mysqli_fetch_array($admin_query_result);
+			$admin_id = $admin_arr['idUser'];
 			
+
+			$notif = "INSERT into notifications (receiver,data, created_at, updated_at) values ('$admin_id', 'Username " . "$username" . "  has registered a new account with a user type of  " . "$user_type', now(), now())";
+			$notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
 
 		}
 	}
