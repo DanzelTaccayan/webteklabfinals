@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2017 at 02:03 PM
+-- Generation Time: May 12, 2017 at 02:37 PM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -130,18 +130,19 @@ CREATE TABLE `sender` (
 CREATE TABLE `services` (
   `service_id` int(11) NOT NULL,
   `service_name` varchar(45) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time_needed` int(7) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`service_id`, `service_name`, `created_at`) VALUES
-(4, 'bundok susong dalaga', '2017-01-03 16:00:00'),
-(7, 'chupa', '2017-05-10 15:20:36'),
-(8, 'mulmol tite', '2017-05-10 15:20:40'),
-(9, 'supsop suso', '2017-05-10 15:20:44');
+INSERT INTO `services` (`service_id`, `service_name`, `created_at`, `time_needed`) VALUES
+(4, 'bundok susong dalaga', '2017-01-03 16:00:00', NULL),
+(7, 'chupa', '2017-05-10 15:20:36', NULL),
+(8, 'mulmol tite', '2017-05-10 15:20:40', NULL),
+(9, 'supsop suso', '2017-05-10 15:20:44', NULL);
 
 -- --------------------------------------------------------
 
@@ -203,7 +204,8 @@ INSERT INTO `users` (`idUsers`, `UserName`, `Password`, `Status`) VALUES
 (6, 'etheldawn', 'wooden', 'Active'),
 (7, 'dasdas', '$2y$10$jACl6i2Dxmtiw.NaJPxs.OOdgzY77LUmwuwa8ZRYL9FZ7WGqHlrFy', 'Active'),
 (8, 'burat', '$2y$10$Rj1fSB88l.ZCXDRkak2nkucU9P6CU4v34DbAbypb/mzbfTrM.fObq', 'Active'),
-(9, 'yuki', '$2y$10$gx/AZWXciIUVd/rnxtBQLevlHPrWEHUyaPl3cMcrHuqoFumud1z1u', 'pending');
+(9, 'yuki', '$2y$10$gx/AZWXciIUVd/rnxtBQLevlHPrWEHUyaPl3cMcrHuqoFumud1z1u', 'pending'),
+(10, 'test', '$2y$10$Y6I.Y0NnQKDdUBDu7EnpTulI5GvwNhx/8aftolpmZl390umiLCzW2', 'pending');
 
 -- --------------------------------------------------------
 
@@ -235,7 +237,8 @@ INSERT INTO `user_details` (`idUser`, `firstName`, `middleName`, `lastName`, `ad
 (6, 'Ethel Dawn', 'Tufay', 'Mejala', 'Camp Dangwa, La Trinidad, Benguet', 'mademoiselle@gmail.com', 222, 'd', '2017-05-10 15:12:47', '2017-04-28 12:36:17', 'customer'),
 (7, 'sadas', 'sadas', 'sdas', 'sadas', 'asdasdas@asdasda.com', 22, '', '2017-05-10 15:12:24', '2017-04-28 12:36:40', 'SP'),
 (8, 'Kobe', 'wv', 'Miguel', 'qwf', '2153820@slu.edu.ph', 32131, 'BOTAS', '2017-05-04 03:49:20', '2017-05-04 03:49:20', 'SP'),
-(9, 'Yuki', 'Pogi', 'Marfil', 'jan sa gilid', 'yukipogi@gmail.com', 98457847, 'Apple', '2017-05-08 03:49:20', '2017-05-08 04:49:20', 'SP');
+(9, 'Yuki', 'Pogi', 'Marfil', 'jan sa gilid', 'yukipogi@gmail.com', 98457847, 'Apple', '2017-05-08 03:49:20', '2017-05-08 04:49:20', 'SP'),
+(10, 'test', 'test', 'test', 'dg', 'tset@ff.com', 3414, 'fswq', '2017-05-12 03:14:58', '2017-05-12 03:14:58', 'SP');
 
 -- --------------------------------------------------------
 
@@ -359,7 +362,7 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `idUsers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idUsers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- Constraints for dumped tables
 --
