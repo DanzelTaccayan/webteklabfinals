@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2017 at 02:37 PM
+-- Generation Time: May 12, 2017 at 03:12 PM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -131,18 +131,19 @@ CREATE TABLE `services` (
   `service_id` int(11) NOT NULL,
   `service_name` varchar(45) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `time_needed` int(7) DEFAULT NULL
+  `time_needed` int(7) DEFAULT NULL,
+  `service_description` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`service_id`, `service_name`, `created_at`, `time_needed`) VALUES
-(4, 'bundok susong dalaga', '2017-01-03 16:00:00', NULL),
-(7, 'chupa', '2017-05-10 15:20:36', NULL),
-(8, 'mulmol tite', '2017-05-10 15:20:40', NULL),
-(9, 'supsop suso', '2017-05-10 15:20:44', NULL);
+INSERT INTO `services` (`service_id`, `service_name`, `created_at`, `time_needed`, `service_description`) VALUES
+(4, 'bundok susong dalaga', '2017-01-03 16:00:00', NULL, NULL),
+(7, 'chupa', '2017-05-10 15:20:36', NULL, NULL),
+(8, 'mulmol tite', '2017-05-10 15:20:40', NULL, NULL),
+(9, 'supsop suso', '2017-05-10 15:20:44', NULL, NULL);
 
 -- --------------------------------------------------------
 
