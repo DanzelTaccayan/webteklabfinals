@@ -8,6 +8,7 @@ if(isset($_SESSION['username']) && $_SESSION['UserType'] =='admin') {
 	//header redd
 }else if(isset($_SESSION['username']) && $_SESSION['UserType'] =='customer') {
 	//header gelo
+    header("Location: http://192.168.0.120:8080/ClientModuleFinal/fuckthisshit.jsp");
 }
 ?>
 

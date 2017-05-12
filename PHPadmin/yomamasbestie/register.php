@@ -18,12 +18,12 @@
 			echo '<p>Username already exist<p>';
 		}else{
 			$password_hash = password_hash($password, PASSWORD_DEFAULT);
-			$register_user = "INSERT into users (UserName, Password, Status, UserType) VALUES ('$username', '$password_hash', 'pending', '$user_type')";
+			$register_user = "INSERT into users (UserName, Password, Status) VALUES ('$username', '$password_hash', 'pending')";
 			$register_user_qry =mysqli_query($conn, $register_user);
 			$id = mysqli_insert_id($conn);
-			$register_details = "INSERT into user_details (idUser, firstName, middleName, lastName, address, email, contactNumber, company, created_at,updated_at) VALUES ('$id', '$firstname', '$middlename', '$lastname', '$address', '$email', '$contact_no', '$company', now(), now())";
-			$register_details_qry = mysqli_query($conn, $register_details);
-			//notification
+			$register_details = "INSERT into user_details (idUser, firstName, middleName, lastName, address, email, contactNumber, company, created_at,updated_at, UserType) VALUES ('$id', '$firstname', '$middlename', '$lastname', '$address', '$email', '$contact_no', '$company', now(), now(),'$user_type')";
+			$register_details_qry = mysqli_query($conn, $register_details) or die(mysqli_error($conn));
+			// notification
 			$admin_query = "SELECT UserType, idUser from user_details where UserType='admin'";
 			$admin_query_result = mysqli_query($conn, $admin_query) or die(mysqli_error($conn));
 			$admin_arr = mysqli_fetch_array($admin_query_result);
