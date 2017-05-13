@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My title</title>
+</head>
+
+<body>
+{% if data|length >= 1: %}
+    <table>
+    	<thead>
+    		<th>ID Request</th>
+    		<th>Service name</th>
+    		<th>Service Description</th>
+    		<th>Request Date</th>
+            <th>Time Needed</th>
+    		<th>Status</th>
+            <th>Requested By</th>
+
+    	</thead>
+    	<tbody>
+            
+    		{% for row in data %}
+    		<tr>
+    			
+    			<td>{{row[0]}}</td>
+    			<td>{{row[1]}}</td>
+    			<td>{{row[2]}}</td>
+    			<td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td>{{row[5]}}</td>
+                <td>{{row[6]}}</td>
+                <form action ='/addReqSuccess' method = 'POST'>
+                    <td><button name = 'accept' value="{{row[0]}}">Accept Request</button>
+    			</form>
+
+                <form action ='/addReqReject' method = 'POST'>
+                    <td><button name = 'reject' value="{{row[0]}}">Reject Request</button>
+                </form>
+    		</tr>
+    		{% endfor %}
+
+    	</tbody>
+    </table>
+{% else: %}
+            <h1>No Request At the Moment</h1>
+{% endif %}
+    <a href="/">Back</a>
+</body>
+
+</html>
