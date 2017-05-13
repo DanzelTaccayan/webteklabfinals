@@ -17,6 +17,28 @@ if (isset($_POST['searchUser'])) {
 	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
 	<input type="submit" name="searchButton" value="Search">
 </form>
+	<?php
+         if (isset($_POST['resetpassword'])) {
+				 $idRes = $_POST['resetpassword'];
+				 	$newpass = mt_rand(10000000, 9999999999);
+					$passwordHash = password_hash($newpass, PASSWORD_DEFAULT);
+
+
+					$resetQuery = "UPDATE users SET Password = '". $passwordHash ."' WHERE idUsers = '$idRes'";
+					$resetQueryResult =mysqli_query($conn, $resetQuery) or die(mysqli_error($conn));
+					if($resetQueryResult) {
+                $resName = "Select UserName from users where idUsers = '$idRes'";
+                $resNameQ = mysqli_query($conn, $resName);
+                $resNameResult = mysqli_fetch_array($resNameQ);
+
+					echo "<script>alert('Password successfully reset!'); </script>";
+					echo "<h1>Username: <i>". $resNameResult['UserName'] ."</i></h1><h1>Your new password is: <i>". $newpass ."</i></h1><h2>Please change the password immediately.</h2><a href='manage_users.php'>OK</a>";
+
+				}
+
+		         } else {
+?>
+
 <table border="1">
 <tr>
 	<th> Username </th>
