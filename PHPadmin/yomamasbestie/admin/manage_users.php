@@ -12,12 +12,7 @@ if (isset($_POST['searchUser'])) {
 	<title>Manage Users</title>
 </head>
 <body>
-<h1> Manage Users </h1>
-<form method="POST">
-	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
-	<input type="submit" name="searchButton" value="Search">
-</form>
-	<?php
+<?php
          if (isset($_POST['resetpassword'])) {
 				 $idRes = $_POST['resetpassword'];
 				 	$newpass = mt_rand(10000000, 9999999999);
@@ -27,9 +22,9 @@ if (isset($_POST['searchUser'])) {
 					$resetQuery = "UPDATE users SET Password = '". $passwordHash ."' WHERE idUsers = '$idRes'";
 					$resetQueryResult =mysqli_query($conn, $resetQuery) or die(mysqli_error($conn));
 					if($resetQueryResult) {
-                $resName = "Select UserName from users where idUsers = '$idRes'";
-                $resNameQ = mysqli_query($conn, $resName);
-                $resNameResult = mysqli_fetch_array($resNameQ);
+						$resName = "Select UserName from users where idUsers = '$idRes'";
+						$resNameQ = mysqli_query($conn, $resName);
+						$resNameResult = mysqli_fetch_array($resNameQ);
 
 					echo "<script>alert('Password successfully reset!'); </script>";
 					echo "<h1>Username: <i>". $resNameResult['UserName'] ."</i></h1><h1>Your new password is: <i>". $newpass ."</i></h1><h2>Please change the password immediately.</h2><a href='manage_users.php'>OK</a>";
@@ -38,8 +33,15 @@ if (isset($_POST['searchUser'])) {
 
 		         } else {
 ?>
+<h1> Manage Users </h1>
+
+<form method="POST">
+	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
+	<input type="submit" name="searchButton" value="Search">
+</form>
 
 <table border="1">
+
 <tr>
 	<th> Username </th>
 	<th> Account Status </th>
@@ -70,12 +72,25 @@ if (isset($_POST['searchUser'])) {
 			echo "<td>" . $user_arr['email'] . "</td>";
 			echo "<td>" . $user_arr['contactnumber'] . "</td>";
 			echo "<td>" . $user_arr['company'] . "</td>";
-	        echo "<form method='POST' action='manage_users.php'>";
-	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button></td>";
-	        echo "<td><button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Disable</button></td>";
+			?>
+	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to activate this account?")'>
+	        <?php
+	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
+	        echo "</form>";
+			?>
+	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to deactivate this account?")'>
+	        <?php
+	        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Deactivate</button>";
+	        echo "</form>"; 
+	        ?>
+	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to reset password?")'> <?php
+	        echo "<button type ='submit' name='resetpassword' value='".$user_arr['idUsers']."'>Reset Password</button></td>";
 			echo "</form>";
 		}
 		echo "</tr>";
+		echo "</table>";
+		echo "<a href='../home.php'>Home</a>";
+		
 
 	}else{
 		$user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin';";
@@ -94,18 +109,32 @@ if (isset($_POST['searchUser'])) {
 			echo "<td>" . $user_arr['email'] . "</td>";
 			echo "<td>" . $user_arr['contactnumber'] . "</td>";
 			echo "<td>" . $user_arr['company'] . "</td>";
-	        echo "<form method='POST' action='manage_users.php'>";
-	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button></td>";
-	        echo "<td><button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Disable</button></td>";
+			?>
+	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to activate this account?")'>
+	        <?php
+	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
+	        echo "</form>";
+			?>
+	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to deactivate this account?")'>
+	        <?php
+	        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Deactivate</button>";
+	        echo "</form>"; 
+	        ?>
+	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to reset password?")'> <?php
+	        echo "<button type ='submit' name='resetpassword' value='".$user_arr['idUsers']."'>Reset Password</button></td>";
 			echo "</form>";
 		}
 		echo "</tr>";
-	}	
+		echo "</table>";
+		echo "<a href='../home.php'>Home</a>";
 
+	}	
+}
 	?>
 
 
 </table>
+
 <?php 
 	    if(isset($_POST['activate'])){
                 $idActive = $_POST['activate'];
@@ -143,7 +172,8 @@ if (isset($_POST['searchUser'])) {
         	    }
          	}
 
+
+
 ?>
-<a href="../home.php">Home</a>
 </body>
 </html>
