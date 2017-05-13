@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My title</title>
+</head>
+
+<body>
+    <table border="1">
+    	<thead>
+    		<th>Transaction ID</th>
+    		<th>Service Name</th>
+    		<th>Status</th>
+    		<th>Customer Name</th>
+    	</thead>
+    	<tbody>
+    		{% for row in ako %}
+    		<tr>
+    			<form action ='/success' method = 'GET'>
+    			<td>{{row[0]}}</td>
+    			<td>{{row[1]}}</td>
+    			<td>{{row[2]}}</td>
+    			<td>{{row[3]}}</td>
+    			</form>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+</body>
+
+</html>
