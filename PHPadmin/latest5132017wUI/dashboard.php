@@ -5,6 +5,7 @@ $transactions = "SELECT * from transaction order by transaction_id desc;";
 $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($conn));
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -27,7 +28,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
     <!-- Custom styles for this template -->
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/style-responsive.css" rel="stylesheet">
-
+    <link href="./css/placing.css" rel="stylesheet">
     <script src="assets/js/chart-master/Chart.js"></script>
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -109,6 +110,11 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                           <i class="fa fa-tasks"></i>
                           <span>View Requests</span>
                       </a>
+                    <li class="sub-menu">
+                        <a href="./admin/transactions.php">
+                            <i class="fa fa-tasks"></i>
+                            <span>View Transactions</span>
+                        </a>
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -128,41 +134,85 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                   	<div class="row mtbox">
                   		<div class="col-md-2 col-sm-2 col-md-offset-1 box0">
                   			<div class="box1">
-					  			<span class="li_heart"></span>
-					  			<h3>933</h3>
+					  			<span class="li_star"></span>
+					  			<h3>
+                                
+                                <?php 
+                                    $totalUser = "SELECT count(idUser) as TotalUsers from user_details;";
+                                    $totalUserQ = mysqli_query($conn, $totalUser);
+	                               $totalUserResult = mysqli_fetch_array($totalUserQ);
+                                   echo "<div>" . $totalUserResult['TotalUsers'] . "</div>";
+
+                                ?>    
+                                    
+                                </h3>
                   			</div>
-					  			<p>933 People liked your page the last 24hs. Whoohoo!</p>
+                            <?php echo "<p> Wow! Great we have " . $totalUserResult['TotalUsers'] . " Users! Whoohoo!</p>"; ?>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
                   			<div class="box1">
-					  			<span class="li_cloud"></span>
-					  			<h3>+48</h3>
+					  			<span class="li_user"></span>
+					  			<h3>
+                                
+                                <?php
+                                  $totalCust = "SELECT count(idUser) as totalCust from user_details where UserType='customer';";
+	                               $totalCustQ = mysqli_query($conn, $totalCust);  
+                                    $totalCustResult = mysqli_fetch_array($totalCustQ);
+	
+                                    echo "<div>" . $totalCustResult['totalCust'] . "</div?>";
+                                ?>
+                                
+                                </h3>
                   			</div>
-					  			<p>48 New files were added in your cloud storage.</p>
+                            <?php
+					  			echo "<p> Cool we have  " . $totalCustResult['totalCust'] . " Customers</p>";
+                            ?>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
                   			<div class="box1">
-					  			<span class="li_stack"></span>
-					  			<h3>23</h3>
+					  			<span class="li_tag"></span>
+					  			<h3>
+                            <?php    
+                            $totalSp = "SELECT count(idUser) as TotalSp from user_details where UserType='SP';";
+                            $totalSpQ = mysqli_query($conn, $totalSp);
+                            $totalSpResult = mysqli_fetch_array($totalSpQ);
+	                        echo "<div>" . $totalSpResult['TotalSp'] . "</div>";
+                            ?>        
+                                
+                                </h3>
                   			</div>
-					  			<p>You have 23 unread messages in your inbox.</p>
+                            <?php
+					  			echo "<p>Awsome! " . $totalSpResult['TotalSp'] . " Service Providers </p>"
+                            ?>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
                   			<div class="box1">
-					  			<span class="li_news"></span>
-					  			<h3>+10</h3>
+					  			<span class="li_fire"></span>
+					  			<h3>
+                                
+                                <?php
+                                  $totalOngoing = "SELECT count(transaction_id) as totalOngo from transaction where transaction_status='ongoing';";
+	                               $totalOngoingQ = mysqli_query($conn, $totalOngoing);  
+                                    $totalOngoingResult = mysqli_fetch_array($totalOngoingQ);
+	                               echo "<div>" . $totalOngoingResult['totalOngo'] . "</div>";
+                                ?>
+                                
+                                </h3>
                   			</div>
-					  			<p>More than 10 news were added in your reader.</p>
+                            <?php
+					  			echo "<p> There are " . $totalOngoingResult['totalOngo'] . " Transa </p>";
+                            ?>
                   		</div>
                   		<div class="col-md-2 col-sm-2 box0">
                   			<div class="box1">
 					  			<span class="li_data"></span>
-					  			<h3>OK!</h3>
+					  			<h3>Hey!</h3>
                   			</div>
 					  			<p>Your server is working perfectly. Relax & enjoy.</p>
                   		</div>
                   	
                   	</div><!-- /row mt -->	
+            
                   
                       
                       <div class="row mt">
@@ -198,7 +248,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                       	<div class="col-md-4 col-sm-4 mb">
                       		<div class="white-panel pn">
                       			<div class="white-header">
-						  			<h5>TOP PRODUCT</h5>
+						  			<h5><a href="#">Facebook Page</a></h5>
                       			</div>
 								<div class="row">
 									<div class="col-sm-6 col-xs-6 goleft">
@@ -207,7 +257,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 									<div class="col-sm-6 col-xs-6"></div>
 	                      		</div>
 	                      		<div class="centered">
-										<img src="assets/img/product.png" width="120">
+										<img src="assets/img/fb.png" width="120">
 	                      		</div>
                       		</div>
                       	</div><!-- /col-md-4 -->
@@ -296,10 +346,12 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 						</div><!-- /col-md-4 -->
 						
 					</div><!-- /row -->
-						
-					
-                  </div><!-- /col-lg-9 END SECTION MIDDLE -->.
-                   <!-- START of RIGHT SIDE PANEL -->
+			
+             
+                  </div>  <!-- col-lg-9 END SECTION MIDDLE -->
+    
+                
+                 <!-- START of RIGHT SIDE PANEL -->
                 <div class="col-lg-3 ds">    
                     <h3>Top Service Providers</h3>
                     <?php 
@@ -325,7 +377,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                     $custRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) AS evaluatee, AVG(rating) as rating FROM webtekfinals.user_details ud JOIN rating r ON ud.idUser = r.evaluatee WHERE UserType = 'customer' GROUP BY idUser ORDER BY 2 desc limit 10";
                     $result = mysqli_query($conn, $custRating);
                     ?>
-                    
+                  
                         <!-- Top Customers -->
                         <h3>Top Customers</h3>
                             <table class="table table-hover">
@@ -355,14 +407,16 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                                         <div id="date-popover-content" class="popover-content"></div>
                                     </div>
                                     <div id="my-calendar"></div>
-                                  </div>
+                                </div>
                             </div>
                         </div><!-- / calendar -->
-                      
-                  </div><!-- /col-lg-3 -->
+                      </div>    
               </div><!--/row -->
           </section>
       </section>
+      
+      
+     
 
       <!--main content end-->
       <!--footer start-->
@@ -376,6 +430,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
       </footer>
       <!--footer end-->
   </section>
+      
 
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery.js"></script>
@@ -390,35 +445,10 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
     <!--common script for all pages-->
     <script src="assets/js/common-scripts.js"></script>
     
-    <script type="text/javascript" src="assets/js/gritter/js/jquery.gritter.js"></script>
-    <script type="text/javascript" src="assets/js/gritter-conf.js"></script>
-
     <!--script for this page-->
-    <script src="assets/js/sparkline-chart.js"></script>    
-	<script src="assets/js/zabuto_calendar.js"></script>	
-	
-	<script type="text/javascript">
-        $(document).ready(function () {
-        var unique_id = $.gritter.add({
-            // (string | mandatory) the heading of the notification
-            title: 'Welcome to Yo Mommas Bestie Salon',
-            // (string | mandatory) the text inside the notification
-            text: 'Where you can find satisfaction</a>.',
-            // (string | optional) the image to display on the left
-            image: 'assets/img/ui-sam.jpg',
-            // (bool | optional) if you want it to fade out on its own or just sit there
-            sticky: true,
-            // (int | optional) the time you want it to be alive for before fading out
-            time: '',
-            // (string | optional) the class name you want to apply to that specific message
-            class_name: 'my-sticky-class'
-        });
-
-        return false;
-        });
-	</script>
-	
-	<script type="application/javascript">
+    <script src="assets/js/zabuto_calendar.js"></script>	
+    <!-- FOR CALLENDAR -->
+    <script type="application/javascript">
         $(document).ready(function () {
             $("#date-popover").popover({html: true, trigger: "manual"});
             $("#date-popover").hide();
@@ -432,15 +462,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                 },
                 action_nav: function () {
                     return myNavFunction(this.id);
-                },
-                ajax: {
-                    url: "show_data.php?action=1",
-                    modal: true
-                },
-                legend: [
-                    {type: "text", label: "Special event", badge: "00"},
-                    {type: "block", label: "Regular event", }
-                ]
+                }
             });
         });
         
@@ -451,7 +473,8 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
             var to = $("#" + id).data("to");
             console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
         }
-    </script>
+    </script>  
+	
   
 
   </body>
