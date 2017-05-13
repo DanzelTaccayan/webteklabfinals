@@ -28,6 +28,13 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 		if(isset($_POST['searchTrans'])){
 			if($_POST['statusTransac'] == 'all'){
 				if(mysqli_num_rows($transactions_result) != 0){
+					echo "<table border='1'>";
+					echo  "<tr>";
+					echo  "<th> Service Provider </th>";
+					echo  "<th> Customer </th>";
+					echo  "<th> Status </th>";
+					echo  "<th> Action </th>";
+					echo  "</tr>";
 				while($transaction_arr = mysqli_fetch_array($transactions_result)){
 				//sp
 				$sp_num = $transaction_arr['sp_id'];
@@ -51,9 +58,18 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 				}
 			}else if(
 				$_POST['statusTransac'] == 'on-going'){
-					if(mysqli_num_rows($transactions_result) != 0){
+						
+					
 					$newtransac = "SELECT * from transaction where transaction_status = 'ongoing' order by transaction_id desc;";
 					$newtransac_result = mysqli_query($conn, $newtransac);
+					if(mysqli_num_rows($newtransac_result) != 0){
+						echo "<table border='1'>";
+						echo  "<tr>";
+						echo  "<th> Service Provider </th>";
+						echo  "<th> Customer </th>";
+						echo  "<th> Status </th>";
+						echo  "<th> Action </th>";
+						echo  "</tr>";
 					while($newtransac_array = mysqli_fetch_array($newtransac_result)){
 						//sp
 						$sp_num = $newtransac_array['sp_id'];
@@ -66,6 +82,8 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 						$nameCust_result = mysqli_query($conn, $nameCust) or die(mysqli_error($conn));
 						$cust_arr = mysqli_fetch_array($nameCust_result);
 
+						
+
 
 						echo "<tr><td>" . $sp_arr['name'] . "</td>";
 						echo "<td>" . $cust_arr['name'] . "</td>";
@@ -73,10 +91,17 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 						echo "<td><a href='view_transaction.php?transaction_id=". $newtransac_array['transaction_id'] . "'>View Details </a></tr>";
 					}
 				}else{
-				echo "<h1> No transactions </h1>";
+				echo "<h1> No on-going transactions </h1>";
 				}
 			}else if($_POST['statusTransac'] == 'done'){
 				if(mysqli_num_rows($transactions_result) != 0){
+						echo "<table border='1'>";
+						echo  "<tr>";
+						echo  "<th> Service Provider </th>";
+						echo  "<th> Customer </th>";
+						echo  "<th> Status </th>";
+						echo  "<th> Action </th>";
+						echo  "</tr>";
 					$newtransac_done = "SELECT * from transaction where transaction_status = 'done' order by transaction_id desc;";
 					$newtransac_done_result = mysqli_query($conn, $newtransac_done);
 					while($new_transac_done_array = mysqli_fetch_array($newtransac_done_result)){
@@ -91,6 +116,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 						$nameCust_result = mysqli_query($conn, $nameCust) or die(mysqli_error($conn));
 						$cust_arr = mysqli_fetch_array($nameCust_result);
 
+						
 
 						echo "<tr><td>" . $sp_arr['name'] . "</td>";
 						echo "<td>" . $cust_arr['name'] . "</td>";
@@ -98,12 +124,18 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 						echo "<td><a href='view_transaction.php?transaction_id=". $new_transac_done_array['transaction_id'] . "'>View Details </a></tr>";
 					}
 				}else{
-				echo "<h1> No transactions </h1>";
+				echo "<h1> No transactions completed </h1>";
 				}
 			}
 		}else{
-			if(mysqli_num_rows($transactions_result) > 1){
-				var_dump(mysqli_num_rows($transactions_result));
+			if(mysqli_num_rows($transactions_result) != 0){
+					echo "<table border='1'>";
+					echo  "<tr>";
+					echo  "<th> Service Provider </th>";
+					echo  "<th> Customer </th>";
+					echo  "<th> Status </th>";
+					echo  "<th> Action </th>";
+					echo  "</tr>";
 				while($transaction_arr = mysqli_fetch_array($transactions_result)){
 				//sp
 					$sp_num = $transaction_arr['sp_id'];
@@ -116,13 +148,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 					$nameCust_result = mysqli_query($conn, $nameCust) or die(mysqli_error($conn));
 					$cust_arr = mysqli_fetch_array($nameCust_result);
 
-					echo "<table border='1'>";
-					echo  "<tr>";
-					echo  "<th> Service Provider </th>";
-					echo  "<th> Customer </th>";
-					echo  "<th> Status </th>";
-					echo  "<th> Action </th>";
-					echo  "</tr>";
+					
 
 
 					echo "<tr><td>" . $sp_arr['name'] . "</td>";
