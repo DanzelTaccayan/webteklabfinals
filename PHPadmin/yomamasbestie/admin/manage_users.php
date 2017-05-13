@@ -105,11 +105,21 @@ if (isset($_POST['searchUser'])) {
             
             if(isset($_POST['disable'])){
                 $idDisable = $_POST['disable'];
-                $disableQuery = "UPDATE users SET Status = 'Disabled' WHERE idUsers = '$idDisable' and status = 'Active'";
-                if(mysqli_query($conn, $disableQuery)){
-                    header("Location: manage_users.php");
-                }
-            }
+                $nameDes = "Select UserName, Status from users where idUsers = '$idDisable'";
+                $nameDesQ = mysqli_query($conn, $nameDes);
+                $nameDesRes = mysqli_fetch_array($nameDesQ);
+                $statusDes = $nameDesRes['Status'];
+                
+                if ($statusDes == 'Active' || $statusDes == 'pending') {
+	                $disableQuery = "UPDATE users SET Status = 'Disabled' WHERE idUsers = '$idDisable'";
+		                if(mysqli_query($conn, $disableQuery)){
+							echo "<script>alert('The account " .$nameDesRes['UserName']. " has been deactivated!'); location.href = 'manage_users.php'; </script>";
+		                }
+        	    } else {
+			            	echo "<script>alert('The account " .$nameDesRes['UserName']. " is already deactivated!');</script>";
+
+        	    }
+         	}
 
 ?>
 <a href="../home.php">Home</a>
