@@ -1,0 +1,46 @@
+.btn, .btn-primary{
+    margin-left: 35%;
+}
+
+#createAcc{
+    padding-left:40%;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #FFE9E8;
+}
+
+.header, .black-bg{
+	background-color: hotpink;
+}
+
+#notificationPlacing{
+    text-align: center;
+   padding-left: 40%;
+}
+
+td.button1{
+    padding: 10px 24px;
+}
+
+.btn .btn-info{
+    background-color: pink;
+}
+
+table{
+    color:black;
+}
+
+.page{
+    margin-left:40%;
+}
+
+button{
+    width=100%;
+}
+
+#goBlack{
+    color:black;
+}
+
+
