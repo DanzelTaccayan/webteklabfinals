@@ -12,6 +12,7 @@ if (isset($_POST['searchUser'])) {
 	<title>Manage Users</title>
 </head>
 <body>
+	<a href='../home.php'>Home</a>
 <?php
          if (isset($_POST['resetpassword'])) {
 				 $idRes = $_POST['resetpassword'];
@@ -40,95 +41,99 @@ if (isset($_POST['searchUser'])) {
 	<input type="submit" name="searchButton" value="Search">
 </form>
 
-<table border="1">
-
-<tr>
-	<th> Username </th>
-	<th> Account Status </th>
-	<th> User Type </th>
-	<th> Name of User </th>
-	<th> Address </th>
-	<th> Email </th>
-	<th> Conctact Number </th>
-	<th> Company </th>
-	<th> Action </th>
-</tr>
 <?php
 	
 	if (isset($_POST['searchButton'])) {
 		$user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' and (username like '%".$searchUser."%' or status like '%".$searchUser."%' or UserType like '%".$searchUser."%' or concat(firstname, ' ', middlename, ' ', lastname) like '%".$searchUser."%' or company like '%".$searchUser."%');";
 		$user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
-		
-		while($user_arr = mysqli_fetch_array($user_result)){
-			echo "<tr><td>" . $user_arr['username'] . "</td>";
-			echo "<td>" . $user_arr['status'] . "</td>";
-			if($user_arr['UserType'] == 'SP'){
-				echo "<td> Service Provider </td>";
-			}else if($user_arr['UserType'] == 'customer'){
-				echo "<td> Customer </td>";
+		if(mysqli_num_rows($user_result) != 0){
+			while($user_arr = mysqli_fetch_array($user_result)){
+				echo "<tr><td>" . $user_arr['username'] . "</td>";
+				echo "<td>" . $user_arr['status'] . "</td>";
+				if($user_arr['UserType'] == 'SP'){
+					echo "<td> Service Provider </td>";
+				}else if($user_arr['UserType'] == 'customer'){
+					echo "<td> Customer </td>";
+				}
+				echo "<td>" . $user_arr['name'] . "</td>";
+				echo "<td>" . $user_arr['address'] . "</td>";
+				echo "<td>" . $user_arr['email'] . "</td>";
+				echo "<td>" . $user_arr['contactnumber'] . "</td>";
+				echo "<td>" . $user_arr['company'] . "</td>";
+				?>
+		        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to activate this account?")'>
+		        <?php
+		        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
+		        echo "</form>";
+				?>
+		        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to deactivate this account?")'>
+		        <?php
+		        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Deactivate</button>";
+		        echo "</form>"; 
+		        ?>
+		        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to reset password?")'> <?php
+		        echo "<button type ='submit' name='resetpassword' value='".$user_arr['idUsers']."'>Reset Password</button></td>";
+				echo "</form>";
 			}
-			echo "<td>" . $user_arr['name'] . "</td>";
-			echo "<td>" . $user_arr['address'] . "</td>";
-			echo "<td>" . $user_arr['email'] . "</td>";
-			echo "<td>" . $user_arr['contactnumber'] . "</td>";
-			echo "<td>" . $user_arr['company'] . "</td>";
-			?>
-	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to activate this account?")'>
-	        <?php
-	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
-	        echo "</form>";
-			?>
-	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to deactivate this account?")'>
-	        <?php
-	        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Deactivate</button>";
-	        echo "</form>"; 
-	        ?>
-	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to reset password?")'> <?php
-	        echo "<button type ='submit' name='resetpassword' value='".$user_arr['idUsers']."'>Reset Password</button></td>";
-			echo "</form>";
+			echo "</tr>";
+			echo "</table>";
+		}else{
+			echo "<h1> No User Found! </h1>";
 		}
-		echo "</tr>";
-		echo "</table>";
-		echo "<a href='../home.php'>Home</a>";
+			
+
 		
 
 	}else{
 		$user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin';";
 		$user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
-
-		while($user_arr = mysqli_fetch_array($user_result)){
-			echo "<tr><td>" . $user_arr['username'] . "</td>";
-			echo "<td>" . $user_arr['status'] . "</td>";
-			if($user_arr['UserType'] == 'SP'){
-				echo "<td> Service Provider </td>";
-			}else if($user_arr['UserType'] == 'customer'){
-				echo "<td> Customer </td>";
+		if(mysqli_num_rows($user_result)!=0){
+			echo "<table border='1'>";
+			echo "<tr>";
+			echo "<th> Username </th>";
+			echo "<th> Account Status </th>";
+			echo "<th> User Type </th>";
+			echo "<th> Name of User </th>";
+			echo "<th> Address </th>";
+			echo "<th> Email </th>";
+			echo "<th> Conctact Number </th>";
+			echo "<th> Company </th>";
+			echo "<th> Action </th>";
+			echo "</tr>";
+			while($user_arr = mysqli_fetch_array($user_result)){
+				echo "<tr><td>" . $user_arr['username'] . "</td>";
+				echo "<td>" . $user_arr['status'] . "</td>";
+				if($user_arr['UserType'] == 'SP'){
+					echo "<td> Service Provider </td>";
+				}else if($user_arr['UserType'] == 'customer'){
+					echo "<td> Customer </td>";
+				}
+				echo "<td>" . $user_arr['name'] . "</td>";
+				echo "<td>" . $user_arr['address'] . "</td>";
+				echo "<td>" . $user_arr['email'] . "</td>";
+				echo "<td>" . $user_arr['contactnumber'] . "</td>";
+				echo "<td>" . $user_arr['company'] . "</td>";
+				?>
+		        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to activate this account?")'>
+		        <?php
+		        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
+		        echo "</form>";
+				?>
+		        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to deactivate this account?")'>
+		        <?php
+		        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Deactivate</button>";
+		        echo "</form>"; 
+		        ?>
+		        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to reset password?")'> <?php
+		        echo "<button type ='submit' name='resetpassword' value='".$user_arr['idUsers']."'>Reset Password</button></td>";
+				echo "</form>";
 			}
-			echo "<td>" . $user_arr['name'] . "</td>";
-			echo "<td>" . $user_arr['address'] . "</td>";
-			echo "<td>" . $user_arr['email'] . "</td>";
-			echo "<td>" . $user_arr['contactnumber'] . "</td>";
-			echo "<td>" . $user_arr['company'] . "</td>";
-			?>
-	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to activate this account?")'>
-	        <?php
-	        echo "<td><button type ='submit' name='activate' value='".$user_arr['idUsers']."'>Activate</button>";
-	        echo "</form>";
-			?>
-	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to deactivate this account?")'>
-	        <?php
-	        echo "<button type ='submit' name='disable' value='".$user_arr['idUsers']."'>Deactivate</button>";
-	        echo "</form>"; 
-	        ?>
-	        <form method= 'post' onsubmit= 'return confirm("Are you sure you want to reset password?")'> <?php
-	        echo "<button type ='submit' name='resetpassword' value='".$user_arr['idUsers']."'>Reset Password</button></td>";
-			echo "</form>";
-		}
 		echo "</tr>";
 		echo "</table>";
-		echo "<a href='../home.php'>Home</a>";
-
-	}	
+		}else{
+			echo "<h1> No User/s Found </h1>";
+		}	
+		}
 }
 	?>
 
