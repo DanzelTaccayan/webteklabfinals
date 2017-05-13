@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.5.1
--- http://www.phpmyadmin.net
+-- version 4.6.4
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2017 at 05:12 PM
--- Server version: 5.7.11
--- PHP Version: 5.6.19
+-- Generation Time: May 13, 2017 at 07:03 PM
+-- Server version: 5.7.14
+-- PHP Version: 5.6.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -30,20 +30,36 @@ CREATE TABLE `feedback` (
   `sender` int(11) NOT NULL,
   `recepient` int(11) NOT NULL,
   `content` text NOT NULL,
-  `feedback_id` int(11) NOT NULL
+  `feedback_id` int(11) NOT NULL,
+  `feedback_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `feedback`
 --
 
-INSERT INTO `feedback` (`sender`, `recepient`, `content`, `feedback_id`) VALUES
-(6, 8, 'ULUL', 3),
-(6, 4, 'PANGET WALANG KWENTA', 4),
-(6, 9, 'MAITITM KA', 5),
-(6, 7, 'ANO TO?', 6),
-(8, 9, 'BASURA', 7),
-(4, 4, 'VERY VERy BAAAAD', 8);
+INSERT INTO `feedback` (`sender`, `recepient`, `content`, `feedback_id`, `feedback_date`) VALUES
+(6, 8, 'ULUL', 3, '2017-05-13 18:59:44'),
+(6, 4, 'PANGET WALANG KWENTA', 4, '2017-05-13 18:59:44'),
+(6, 9, 'MAITITM KA', 5, '2017-05-13 18:59:44'),
+(6, 7, 'ANO TO?', 6, '2017-05-13 18:59:44'),
+(8, 9, 'BASURA', 7, '2017-05-13 18:59:44'),
+(4, 4, 'VERY VERy BAAAAD', 8, '2017-05-13 18:59:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `message_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `sender` int(11) NOT NULL,
+  `recipient` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -65,7 +81,9 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`id`, `receiver`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
-(3, 5, 'Username 123  has registered a new account with a user type of  SP', NULL, '2017-05-12 16:35:33', '2017-05-12 16:35:33');
+(3, 5, 'Username 123  has registered a new account with a user type of  SP', '2017-05-12 19:01:19', '2017-05-12 16:35:33', '2017-05-12 16:35:33'),
+(4, 5, 'Username miguel  has registered a new account with a user type of  SP', '2017-05-12 19:05:33', '2017-05-12 19:05:15', '2017-05-12 19:05:15'),
+(5, 5, 'Username eyot  has registered a new account with a user type of  customer', '2017-05-13 11:50:44', '2017-05-13 11:43:48', '2017-05-13 11:43:48');
 
 -- --------------------------------------------------------
 
@@ -102,6 +120,7 @@ INSERT INTO `rating` (`rating_id`, `evaluator`, `evaluatee`, `rating`) VALUES
 
 --
 -- Stand-in structure for view `recipient`
+-- (See below for the actual view)
 --
 CREATE TABLE `recipient` (
 `recepient` int(11)
@@ -122,13 +141,22 @@ CREATE TABLE `request` (
   `service_id` int(11) NOT NULL,
   `request_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `time_needed` varchar(7) DEFAULT NULL
+  `time_needed` varchar(7) DEFAULT NULL,
+  `description` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='	';
+
+--
+-- Dumping data for table `request`
+--
+
+INSERT INTO `request` (`idrequest`, `status`, `requested_by`, `requested_to`, `service_id`, `request_date`, `updated_at`, `time_needed`, `description`) VALUES
+(1, 'pending', 6, 7, 1, '2017-05-10 15:12:13', '2017-05-10 15:12:13', '12:13', NULL);
 
 -- --------------------------------------------------------
 
 --
 -- Stand-in structure for view `sender`
+-- (See below for the actual view)
 --
 CREATE TABLE `sender` (
 `sender` int(11)
@@ -149,6 +177,14 @@ CREATE TABLE `services` (
   `sp_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `services`
+--
+
+INSERT INTO `services` (`service_id`, `service_name`, `created_at`, `service_description`, `sp_id`) VALUES
+(1, 'Haircut', '2017-05-10 15:12:13', '2017-05-10 23:12:13', 6),
+(2, 'Jakol', '2017-05-10 15:12:13', '2017-05-10 23:12:13', 6);
+
 -- --------------------------------------------------------
 
 --
@@ -162,7 +198,7 @@ CREATE TABLE `transaction` (
   `sp_id` int(11) NOT NULL,
   `cust_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -189,7 +225,9 @@ INSERT INTO `users` (`idUsers`, `UserName`, `Password`, `Status`) VALUES
 (7, 'dasdas', '$2y$10$jACl6i2Dxmtiw.NaJPxs.OOdgzY77LUmwuwa8ZRYL9FZ7WGqHlrFy', 'Active'),
 (8, 'burat', '$2y$10$Rj1fSB88l.ZCXDRkak2nkucU9P6CU4v34DbAbypb/mzbfTrM.fObq', 'Active'),
 (9, 'yuki', '$2y$10$gx/AZWXciIUVd/rnxtBQLevlHPrWEHUyaPl3cMcrHuqoFumud1z1u', 'pending'),
-(10, 'test', '$2y$10$Y6I.Y0NnQKDdUBDu7EnpTulI5GvwNhx/8aftolpmZl390umiLCzW2', 'pending');
+(10, 'test', '$2y$10$Y6I.Y0NnQKDdUBDu7EnpTulI5GvwNhx/8aftolpmZl390umiLCzW2', 'pending'),
+(11, 'miguel', '$2y$10$csoRcvrgNpNuZRbRDaj0juoBIDTTzRxrf2I7B0Hx.LCG9/DCiCYZ2', 'pending'),
+(12, 'eyot', '$2y$10$hBW7T4fcFLYZ6z.RrNM7UOEYIBuo3ZPxYc5s1BROBLfo5hF5mdO92', 'pending');
 
 -- --------------------------------------------------------
 
@@ -222,7 +260,9 @@ INSERT INTO `user_details` (`idUser`, `firstName`, `middleName`, `lastName`, `ad
 (7, 'sadas', 'sadas', 'sdas', 'sadas', 'asdasdas@asdasda.com', 22, '', '2017-05-10 15:12:24', '2017-04-28 12:36:40', 'SP'),
 (8, 'Kobe', 'wv', 'Miguel', 'qwf', '2153820@slu.edu.ph', 32131, 'BOTAS', '2017-05-04 03:49:20', '2017-05-04 03:49:20', 'SP'),
 (9, 'Yuki', 'Pogi', 'Marfil', 'jan sa gilid', 'yukipogi@gmail.com', 98457847, 'Apple', '2017-05-08 03:49:20', '2017-05-08 04:49:20', 'SP'),
-(10, 'test', 'test', 'test', 'dg', 'tset@ff.com', 3414, 'fswq', '2017-05-12 03:14:58', '2017-05-12 03:14:58', 'SP');
+(10, 'test', 'test', 'test', 'dg', 'tset@ff.com', 3414, 'fswq', '2017-05-12 03:14:58', '2017-05-12 03:14:58', 'SP'),
+(11, 'test', 'trst ', 'wow ', 'mecv', 'faloW@dms', 448484, '646cdwcw', '2017-05-12 19:05:14', '2017-05-12 19:05:14', 'SP'),
+(12, 'c', 'dv', 'dq', 'dwv', 'dvw@ef', 23321, 'dwv', '2017-05-13 11:43:48', '2017-05-13 11:43:48', 'customer');
 
 -- --------------------------------------------------------
 
@@ -253,6 +293,12 @@ ALTER TABLE `feedback`
   ADD PRIMARY KEY (`feedback_id`),
   ADD KEY `sender_idx` (`sender`),
   ADD KEY `recipient_idx` (`recepient`);
+
+--
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`message_id`);
 
 --
 -- Indexes for table `notifications`
@@ -322,10 +368,15 @@ ALTER TABLE `user_details`
 ALTER TABLE `feedback`
   MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `rating`
 --
@@ -337,6 +388,11 @@ ALTER TABLE `rating`
 ALTER TABLE `request`
   MODIFY `idrequest` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
+-- AUTO_INCREMENT for table `services`
+--
+ALTER TABLE `services`
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
@@ -345,7 +401,7 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `idUsers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idUsers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- Constraints for dumped tables
 --
@@ -356,6 +412,13 @@ ALTER TABLE `users`
 ALTER TABLE `feedback`
   ADD CONSTRAINT `recipient` FOREIGN KEY (`recepient`) REFERENCES `user_details` (`idUser`) ON UPDATE CASCADE,
   ADD CONSTRAINT `sender` FOREIGN KEY (`sender`) REFERENCES `user_details` (`idUser`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `message`
+--
+ALTER TABLE `message`
+  ADD CONSTRAINT `recipient_fk` FOREIGN KEY (`message_id`) REFERENCES `user_details` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `sender_fk` FOREIGN KEY (`message_id`) REFERENCES `user_details` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `notifications`
