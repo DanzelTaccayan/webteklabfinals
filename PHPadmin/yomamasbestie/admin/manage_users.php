@@ -87,11 +87,19 @@ if (isset($_POST['searchUser'])) {
 <?php 
 	    if(isset($_POST['activate'])){
                 $idActive = $_POST['activate'];
-                var_dump($idActive);
+                $nameAc = "Select UserName, Status from users where idUsers = '$idActive'";
+                $nameAcQ = mysqli_query($conn, $nameAc);
+                $nameAcRes = mysqli_fetch_array($nameAcQ);
+                $statusAc = $nameAcRes['Status'];
+
+                if ($statusAc == 'Disabled' || $statusAc == 'pending') {
                 $activateQuery = "UPDATE users SET Status = 'Active' WHERE idUsers = '$idActive'";
                 if(mysqli_query($conn, $activateQuery)){
-                	header("Location: manage_users.php");
+					echo "<script>alert('The account " .$nameAcRes['UserName']. " has been activated!'); location.href = 'manage_users.php'; </script>";
                 }
+            } else {
+            	echo "<script>alert('The account " .$nameAcRes['UserName']. " is already activated!');</script>";
+            }
                
             }
             
