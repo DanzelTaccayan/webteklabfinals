@@ -63,7 +63,18 @@ $pages = ceil($totalrequest/$limit);
 		$user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
 		if(mysqli_num_rows($user_result) != 0){
 			while($user_arr = mysqli_fetch_array($user_result)){
-				echo "<table>";
+				echo "<table border='1'>";
+				echo "<tr>";
+				echo "<th> Username </th>";
+				echo "<th> Account Status </th>";
+				echo "<th> User Type </th>";
+				echo "<th> Name of User </th>";
+				echo "<th> Address </th>";
+				echo "<th> Email </th>";
+				echo "<th> Conctact Number </th>";
+				echo "<th> Company </th>";
+				echo "<th> Action </th>";
+				echo "</tr>";
 				echo "<tr><td>" . $user_arr['username'] . "</td>";
 				echo "<td>" . $user_arr['status'] . "</td>";
 				if($user_arr['UserType'] == 'SP'){
