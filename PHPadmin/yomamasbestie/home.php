@@ -36,7 +36,7 @@ $notif_num_result = mysqli_query($conn,$notif_num);
 <h1>Ratings</h1>
 
 <?php 
-$spRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) AS evaluatee, AVG(rating) as rating FROM webtekfinals.user_details ud JOIN rating r ON ud.idUser = r.evaluatee WHERE UserType = 'SP' GROUP BY idUser ORDER BY 1 desc limit 10";
+$spRating = "SELECT CONCAT(lastName,', ',firstName,' ',middleName) AS evaluatee,AVG(rating) as rating FROM webtekfinals.user_details JOIN rating  ON idUser = evaluatee WHERE UserType = 'SP' GROUP BY idUser ORDER BY 2 desc";
 $result = mysqli_query($conn, $spRating);
 ?>
 <h2>Top Service Providers</h2>
@@ -120,19 +120,18 @@ $totalSpQ = mysqli_query($conn, $totalSp);
           <h4 class="modal-title">Notifications</h4>
         </div>
         <div class="modal-body">
-          <p>Some text in the modal.</p>
           <?php
-          $notif = "SELECT * from notifications";
+          $notif = "SELECT * from notifications order by 1 desc";
           $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
           while($arr = mysqli_fetch_array($notif_result)){
-          	echo "<div><a href='./admin/manage_users.php'> ".$arr['data']."</a></div>"; 
+          	echo "<div><a href='./admin/manage_users.php'> ".$arr['data']."</a></div><hr>"; 
           }
+
 
           $update = "UPDATE notifications SET read_at=now() WHERE read_at is null";
           $update_result = mysqli_query($conn, $update) or die(mysqli_error($conn));
 
           ?>
-
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

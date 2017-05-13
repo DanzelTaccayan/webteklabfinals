@@ -12,26 +12,21 @@ if (isset($_POST['searchUser'])) {
 	<title>Users</title>
 </head>
 <body>
+<a href="../home.php">Home</a>
 <h1> Users </h1>
 <form method="POST">
 	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
 	<input type="submit" name="searchButton" value="Search">
 </form>
-<table border="1">
-<tr>
-	<th> Username </th>
-	<th> User Type </th>
-	<th> Name of User </th>
-	<th> Company </th>
-	<th> Action </th>
-</tr>
+
 <?php
 	
 	if (isset($_POST['searchButton'])) {
 		$user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' and status='active' and (username like '%".$searchUser."%' or concat(firstname, ' ', middlename, ' ', lastname) like '%".$searchUser."%' or company like '%".$searchUser."%');";
 		$user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
 		
-		while($user_arr = mysqli_fetch_array($user_result)){
+		if(mysqli_num_rows($user_result) !=0){
+			while($user_arr = mysqli_fetch_array($user_result)){
 			echo "<tr><td>" . $user_arr['username'] . "</td>";
 			
 			if($user_arr['UserType'] == 'SP'){
@@ -44,14 +39,27 @@ if (isset($_POST['searchUser'])) {
 	        echo "<form method='POST' action='manage_users.php'>";
 	        echo "<td><a href='view_profile.php?idUsers=". $user_arr['idUsers'] . "'>View Details </a></td>";
 			echo "</form>";
+			}
+			echo "</tr>";
+		}else{
+			echo "<h1> User not Found! </h1>";
 		}
-		echo "</tr>";
+		
 
 	}else{
 		$user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' and status='active';";
 		$user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
 
-		while($user_arr = mysqli_fetch_array($user_result)){
+		if(mysqli_num_rows($user_result) != 0){
+			echo "<table border='1'>";
+			echo "<tr>";
+			echo "<th> Username </th>";
+			echo "<th> User Type </th>";
+			echo "<th> Name of User </th>";
+			echo "<th> Company </th>";
+			echo "<th> Action </th>";
+			echo "</tr>";
+			while($user_arr = mysqli_fetch_array($user_result)){
 			echo "<tr><td>" . $user_arr['username'] . "</td>";
 			if($user_arr['UserType'] == 'SP'){
 				echo "<td> Service Provider </td>";
@@ -63,8 +71,10 @@ if (isset($_POST['searchUser'])) {
 	        echo "<form method='POST' action='manage_users.php'>";
 	        echo "<td><a href='view_profile.php?idUsers=". $user_arr['idUsers'] . "'>View Details </a></td>";
 			echo "</form>";
+			}
+			echo "</tr>";
 		}
-		echo "</tr>";
+		
 	}	
 
 	?>
@@ -72,6 +82,6 @@ if (isset($_POST['searchUser'])) {
 
 </table>
 
-<a href="../home.php">Home</a>
+
 </body>
 </html>
