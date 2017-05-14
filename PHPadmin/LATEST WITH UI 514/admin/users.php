@@ -1,6 +1,6 @@
 <?php
 include '../shared/connection.php';
-include '../shared/auth.php';
+include 'auth.php';
 $transactions = "SELECT * from transaction order by transaction_id desc;";
 $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($conn));
 
@@ -54,7 +54,13 @@ if (isset($_POST['searchUser'])) {
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-               <li> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme"><?php echo mysqli_num_rows($notif_num_result);?></span></button></li>
+               <li> <button type="button" id='userlist' class="btn btn-info" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme">
+                  <?php
+                   $notifs = "SELECT * from notifications where notification_type='Admin' and read_at is null";
+                   $notifs_result = mysqli_query($conn, $notifs);
+                   echo mysqli_num_rows($notifs_result); 
+                   ?>
+               </span></button></li>
                     <!-- settings end -->
              
                 <!--  notification end -->
@@ -77,7 +83,6 @@ if (isset($_POST['searchUser'])) {
               <ul class="sidebar-menu" id="nav-accordion">
               
               	  <p class="centered"><a href="profile.php"><img src="../assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">BESTIE</h5>
               	  	
                   <li class="mt">
                       <a href="../dashboard.php">
@@ -151,7 +156,7 @@ if (isset($_GET['page']) && $_GET['page'] > 0)
 $offset = ($current_page * $limit) - $limit;
 
 $user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' and status='active';";
-$paginator = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' and status='active' LIMIT $offset, $limit;";
+$paginator = "select idUsers, username, status, UserType, CONCAT(lastName,', ',firstName,' ',middleName) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' and status='active' LIMIT $offset, $limit;";
 $paginatorQ = mysqli_query($conn, $paginator) or die(mysqli_error($conn));
 $userResultQ = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));	
 
@@ -235,6 +240,10 @@ $pages = ceil($totalrequest/$limit);
 					}else{
 						echo "<li><a href='users.php?page=" .($current_page + 1). "'>&raquo;</a></li>";
 					}
+          if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location = 'users.php';</script>";
+          }
+
 				?>
              </ul>
           </div>    
@@ -257,13 +266,10 @@ $pages = ceil($totalrequest/$limit);
           $notif = "SELECT * from notifications order by 1 desc limit 8";
           $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
           while($arr = mysqli_fetch_array($notif_result)){
-          	echo "<div><a href='./admin/manage_users.php'> ".$arr['data']."</a></div><hr>"; 
+          	echo "<div><a href='manage_users.php'> ".$arr['data']."</a></div><hr>"; 
           }
             echo "<a href='view_notif.php'>See more</a>";
 
-
-          $update = "UPDATE notifications SET read_at=now() WHERE read_at is null";
-          $update_result = mysqli_query($conn, $update) or die(mysqli_error($conn));
 
           ?>
         </div>
@@ -299,4 +305,22 @@ $pages = ceil($totalrequest/$limit);
 	<script src="../assets/js/zabuto_calendar.js"></script>	
     
 </body>
+<!-- AJAX UPDATE -->
+<script>
+
+  document.getElementById('userlist').onclick = function(){
+if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+}else{// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function(){
+  if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    //do nothing
+    }
+  }
+xmlhttp.open("GET","update_notifications.php",true);
+xmlhttp.send();
+}
+</script>
 </html>
