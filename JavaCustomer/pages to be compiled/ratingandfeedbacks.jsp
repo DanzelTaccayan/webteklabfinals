@@ -57,12 +57,12 @@ pageEncoding="ISO-8859-1"%>
             String password = "winter";
             con = DriverManager.getConnection(url, user, password);
             
-            String uid = (String) session.getAttribute("user-id");
-            int userid1 = Integer.parseInt(uid);
-            String sql2 = "SELECT * FROM user_details where idUser="+userid1+" ";
-            
-            ps = con.prepareStatement(sql2);
-            rs = ps.executeQuery();
+////            String uid = session.getAttribute("user-id").toString();
+//            Integer userid1 = (Integer) session.getAttribute("user-id");
+//            String sql2 = "SELECT * FROM user_details where idUser='+userid1.intValue()+' ";
+//            
+//            ps = con.prepareStatement(sql2);
+//            rs = ps.executeQuery();
         %>
 
     	<div class="sidebar-wrapper">
@@ -171,7 +171,7 @@ pageEncoding="ISO-8859-1"%>
                             </div>
                             
                             <%
-                               String mysql = "select concat(user_details.firstName, ' ', user_details.lastName) as spname from user_details join services on(user_details.idUser=services.sp_id) where user_details.usertype='SP'";
+                               String mysql = "select user_details.firstName, user_details.lastName, user_details.idUser from user_details join services on(user_details.idUser=services.sp_id) where user_details.usertype='SP'";
                                
                                ps = con.prepareStatement(mysql);
                                rs2 = ps.executeQuery();
@@ -179,19 +179,22 @@ pageEncoding="ISO-8859-1"%>
                             %>
                                 
                             <div class="content">
-                                <form method="POST" action="update.jsp">
+                                <form method="POST" action="RatingsandFeedback">
                                     
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Service Provider</label>
-                                                <select name="evaluatee" class="form-control" placeholder="Choose your Service Provider..." value="">
+                                                <select name="evaluatee" class="form-control">
                                                     <option>Choose your Service Provider...</option>
                                                     <%
                                                        while(rs2.next()){
-                                                            String spfname = rs2.getString("spname");
+                                                            String spfname = rs2.getString("user_details.firstName");
+                                                            String splname = rs2.getString("user_details.lastName");
+                                                            int sp_id = rs2.getInt("user_details.idUser");
                                                     %>
-                                                    <option name="evaluatee" value=<%=spfname%>><%=spfname%></option>
+                                                    <option value=<%=sp_id%> ><%=spfname%> <%=splname%></option>
+   
                                                     <%
                                                         }
                                                     %>
@@ -204,7 +207,7 @@ pageEncoding="ISO-8859-1"%>
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Feedback</label>
-                                                <textarea name="user_feedback" rows="10" class="form-control" placeholder="Place your Feedback here..." value=""></textarea>
+                                                <textarea name="user_feedback" rows="10" class=" form-control" placeholder="Place your Feedback here..." ></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -213,14 +216,14 @@ pageEncoding="ISO-8859-1"%>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Ratings</label>
-                                                <input name="user_ratings" type="text" class="form-control" placeholder="Rate your Service Provider by 1-5" value="" >
+                                                <input name="user_ratings" type="number" min="1" max="5" class="form-control" placeholder="Rate your Service Provider by 1-5">
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button type="submit" class="btn btn-info btn-fill pull-left">Submit</button>
+                                    <button type="submit" class="btn btn-info btn-fill pull-left btn-success" onclick="">Submit</button>
                                     
-                                    <button type="submit" class="btn btn-info btn-fill pull-right">Cancel</button>
+                                    <button type="reset" class="btn btn-info btn-fill pull-right">Cancel</button>
                                     <div class="clearfix"></div>
                                 </form>
                             </div>
@@ -228,40 +231,7 @@ pageEncoding="ISO-8859-1"%>
                                                     
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card card-user">
-                            <div class="image">
-                                <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="..."/>
-                            </div>
-                            <div class="content">
-                                <div class="author">
-                                     <a href="#">
-                                    <img class="avatar border-gray" src="assets/img/faces/face-0.jpg" alt="..."/>
-                                    
-                                    <%
-                                       while(rs.next()){
-                                            String firstname = rs.getString("firstName");
-                                            String lastname = rs.getString("lastName");
-                                       %>
-                                      <h4 class="title"><%=firstname%> <%=lastname%><br />
-                                         <small><%=session.getAttribute("name")%></%></small>
-                                      </h4>
-                                    </a>
-                                </div>
-                                <p class="description text-center"> Siyak ni Ethel Dawn Tufay Mejala! HAHAHA!
-                                </p>
-                                <% } %>
-                            </div>
- 
-                            <hr>
-                            <div class="text-center">
-                                <button href="#" class="btn btn-simple"><i class="fa fa-facebook-square"></i></button>
-                                <button href="#" class="btn btn-simple"><i class="fa fa-twitter"></i></button>
-                                <button href="#" class="btn btn-simple"><i class="fa fa-google-plus-square"></i></button>
-
-                            </div>
-                        </div>
-                    </div>
+  
 
                 </div>
             </div>
@@ -289,7 +259,21 @@ pageEncoding="ISO-8859-1"%>
     </div>
 </div>
 
+<%
+    session.setMaxInactiveInterval(2);
+%>
 
+<script type="text/javascript">
+    var status = "<%=session.getAttribute("showNotifSuccess")%>"
+    if(status!="Null"){
+            if(status=="Yes"){
+                function alertShit(){
+                    demo.showNotificationSuccess('bottom', 'left');
+                }
+            }
+        }
+</script>
+<script type="text/javascript"> window.onload = alertShit;</script>
 </body>
 
     <!--   Core JS Files   -->

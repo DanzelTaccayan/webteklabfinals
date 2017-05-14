@@ -337,15 +337,6 @@ pageEncoding="ISO-8859-1"%>
 
 </body>
             
-<script>
-    window.onload = function () {
-        if (! localStorage.justOnce) {
-            localStorage.setItem("justOnce", "true");
-            window.location.reload();
-        }
-    }
-</script>
-            
     <!--   Core JS Files   -->
     <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
 	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
