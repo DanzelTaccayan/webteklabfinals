@@ -1,9 +1,12 @@
 <?php
 include '../shared/connection.php';
-include '../shared/auth.php';
+include 'auth.php';
 if (isset($_POST['searchUser'])) {
 	$searchUser = $_POST['searchUser'];
 }
+//notif number
+$notif_num = "SELECT * from notifications where read_at is null";
+$notif_num_result = mysqli_query($conn,$notif_num);
 			
 ?>
 <!DOCTYPE html>
@@ -41,7 +44,7 @@ if (isset($_POST['searchUser'])) {
       TOP BAR CONTENT & NOTIFICATIONS
       *********************************************************************************************************************************************************** -->
    <!--header start-->
-      <header class="header black-bg">
+          <header class="header black-bg">
               <div class="sidebar-toggle-box">
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
@@ -50,78 +53,15 @@ if (isset($_POST['searchUser'])) {
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
-                    <!-- settings start -->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                            <i class="fa fa-tasks"></i>
-                            <span class="badge bg-theme">4</span>
-                        </a>
-                        <ul class="dropdown-menu extended tasks-bar">
-                            <div class="notify-arrow notify-arrow-green"></div>
-                            <li>
-                                <p class="green">You have 4 pending tasks</p>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Bestie Admin Panel</div>
-                                        <div class="percent">40%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                            <span class="sr-only">40% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Database Update</div>
-                                        <div class="percent">60%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (warning)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Product Development</div>
-                                        <div class="percent">80%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                            <span class="sr-only">80% Complete</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Payments Sent</div>
-                                        <div class="percent">70%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-                                            <span class="sr-only">70% Complete (Important)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="external">
-                                <a href="#">See All Tasks</a>
-                            </li>
-                        </ul>
-                    </li>
+               <li> <button type="button" id = 'feedbacknotif' class="btn btn-info" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme">
+                  <?php
+                   $notifs = "SELECT * from notifications where notification_type='Admin' and read_at is null";
+                   $notifs_result = mysqli_query($conn, $notifs);
+                   echo mysqli_num_rows($notifs_result); 
+                   ?>
+               </span></button></li>
                     <!-- settings end -->
-                    <!-- inbox dropdown end -->
-                </ul>
+             
                 <!--  notification end -->
             </div>
             <div class="top-menu">
@@ -143,8 +83,7 @@ if (isset($_POST['searchUser'])) {
               <ul class="sidebar-menu" id="nav-accordion">
               
               	  <p class="centered"><a href="profile.php"><img src="../assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">BESTIE</h5>
-              	  	
+
                   <li class="mt">
                       <a href="../dashboard.php">
                           <i class="fa fa-dashboard"></i>
@@ -165,8 +104,7 @@ if (isset($_POST['searchUser'])) {
                           <i class="fa fa-book"></i>
                           <span>Users</span>
                       </a>
-                 
-                  <li class="sub-menu">
+                     <li class="sub-menu">
                       <a href="viewRequests.php" >
                           <i class="fa fa-tasks"></i>
                           <span>View Requests</span>
@@ -176,11 +114,12 @@ if (isset($_POST['searchUser'])) {
                             <i class="fa fa-tasks"></i>
                             <span>View Transactions</span>
                         </a>
-                    <li class="sub-menu">
-                      <a class="active"  href="feedback_log.php" >
+                  <li class="sub-menu">
+                      <a class="active" href="feedback_log.php" >
                           <i class="fa fa-book"></i>
                           <span>Feedbacks</span>
                       </a>
+              
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -212,7 +151,11 @@ if (isset($_POST['searchUser'])) {
             SELECT 
 		idUser as a,
         content,
-        CONCAT(lastName, firstName, middleName) AS resNames
+               CONCAT(lastName,
+                ', ',
+                firstName,
+                ' ',
+                middleName) AS resNames
     FROM
         feedback
             NATURAL JOIN
@@ -223,7 +166,11 @@ if (isset($_POST['searchUser'])) {
     SELECT 
 		idUser as b,
         content,
-        CONCAT(lastName, firstName, middleName) AS senderNames
+        CONCAT(lastName,
+                ', ',
+                firstName,
+                ' ',
+                middleName) AS senderNames
     FROM
         feedback
             NATURAL JOIN
@@ -278,12 +225,46 @@ if (isset($_POST['searchUser'])) {
 						$a = $current_page + 1;
 						echo "<li><a href='feedback_log.php?page=" .$a. "'>&raquo;</a></li>";
 					}
+          if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location = 'feedback_log.php';</script>";
+          }
+
 				?>
 			</ul>
          </div>
             </section>
+    <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Notifications</h4>
+        </div>
+        <div class="modal-body">
+          <?php
+          $notif = "SELECT * from notifications order by 1 desc limit 8";
+          $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
+          while($arr = mysqli_fetch_array($notif_result)){
+          	echo "<div><a href='manage_users.php'> ".$arr['data']."</a></div><hr>"; 
+          }
+            echo "<a href='view_notif.php'>See more</a>";
+
+
+          ?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+            </section>
     </section>
-    </section>
+    
 <script src="../assets/js/jquery.js"></script>
     <script src="../assets/js/jquery-1.8.3.min.js"></script>
     <script src="../assets/js/bootstrap.min.js"></script>
@@ -304,4 +285,22 @@ if (isset($_POST['searchUser'])) {
 	<script src="../assets/js/zabuto_calendar.js"></script>
 
 </body>
+<!-- AJAX UPDATE -->
+<script>
+
+ document.getElementById('feedbacknotif').onclick = function (){
+if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+}else{// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function(){
+  if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    //do nothing
+    }
+  }
+xmlhttp.open("GET","update_notifications.php",true);
+xmlhttp.send();
+}
+</script>
 </html>
