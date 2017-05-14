@@ -136,9 +136,6 @@ def showAnsTrans():
 #==========================================================================
 
 #======================VIEW PROFILE========================================
-@app.route('/view')
-def view():
-	return render_template('dashboard.html')
 
 @app.route('/viewprofile')
 def viewprofile():
@@ -161,7 +158,81 @@ def viewprofile():
 
 	cursor.close()
 	conn.close()
+#======================VIEW FEEDBACKS========================================
+@app.route('/viewfeedbacks')
+def view():
+	sql = "select * from feedback"
+	cursor.execute(sql)
+	feedbacks = cursor.fetchall()
 
+	return render_template('viewFeedbacks.html', feedbacks=feedbacks)
+	conn.close()
+#======================ADD SERVICE========================================
+
+@app.route('/addservice')
+def add():
+	return render_template('addServices.html')
+
+@app.route('/addservices', methods = ['POST'])
+def addservice():
+	
+	serviceName = request.form['servicename']
+	serviceDesc = request.form['servicedesc']
+
+	errors = 0
+
+	try:
+		query = "INSERT INTO services (service_name, created_at, service_description, sp_id) VALUES ('%s', NOW(), '%s', '6')" %(serviceName, serviceDesc)
+		cursor.execute(query)
+
+	except (MySQLdb.Error, MySQLdb.Warning):
+		errors = errors +1
+		return 'error on user input'
+
+	if errors == 0:
+		conn.commit()
+		return "Yeah"
+	else:
+		return "There was an error in requesting your acc"
+	
+	conn.close()
+#======================DELETE SERVICE========================================
+	
+@app.route('/deleteservice')
+def delete():
+
+	query = "select * from services"
+	cursor.execute(query)
+
+	data = cursor.fetchall()
+	return render_template('deleteServices.html', data = data)
+
+
+@app.route('/deleteservices', methods = ['POST'])
+def deleteServices():
+	idService = request.form['delete']
+	errors = 0
+
+	try:	
+		query = "DELETE FROM services WHERE services.service_id = '%s'" %idService
+		cursor.execute(query)
+		conn.commit()
+
+	
+
+	except (MySQLdb.Error, MySQLdb.Warning):
+		errors = errors + 1
+		return 'Request not found'
+
+	if errors == 0:
+		conn.commit()
+		return "yeah"
+	else:
+		return "There was an error"
+
+	cursor.close();
+	conn.close()	
+	
 
 if __name__ == '__main__':
 	app.run(host='localhost', debug=True)
