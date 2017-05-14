@@ -135,6 +135,33 @@ def showAnsTrans():
     conn.close()
 #==========================================================================
 
+#======================VIEW PROFILE========================================
+@app.route('/view')
+def view():
+	return render_template('dashboard.html')
+
+@app.route('/viewprofile')
+def viewprofile():
+	query = "SELECT * from user_details"
+	cursor.execute(query)	
+	data = cursor.fetchall()
+	conn.commit()
+
+	query1 = "SELECT * from services"
+	cursor.execute(query1)	
+	data1 = cursor.fetchall()
+	conn.commit()
+
+	query2 = "SELECT * from transaction"
+	cursor.execute(query2)	
+	data2 = cursor.fetchall()
+	conn.commit()
+
+	return render_template('viewprofile.html', data=data,data1=data1,data2=data2)
+
+	cursor.close()
+	conn.close()
+
 
 if __name__ == '__main__':
 	app.run(host='localhost', debug=True)
