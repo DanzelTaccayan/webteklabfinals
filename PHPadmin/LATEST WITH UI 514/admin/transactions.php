@@ -1,9 +1,12 @@
 <?php
 include '../shared/connection.php';
-include '../shared/auth.php';
+include 'auth.php';
 $transactions = "SELECT * from transaction order by transaction_id desc;";
 $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($conn));
 
+//notif number
+$notif_num = "SELECT * from notifications where read_at is null";
+$notif_num_result = mysqli_query($conn,$notif_num);
 
 ?>
 
@@ -40,88 +43,27 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
       <!-- **********************************************************************************************************************************************************
       TOP BAR CONTENT & NOTIFICATIONS
       *********************************************************************************************************************************************************** -->
-      <!--header start-->
+        <!-- start of header-->
       <header class="header black-bg">
               <div class="sidebar-toggle-box">
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
+          
             <!--logo start-->
             <a href="index.html" class="logo"><b>BESTIE SALON</b></a>
             <!--logo end-->
+          
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
-                    <!-- settings start -->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                            <i class="fa fa-tasks"></i>
-                            <span class="badge bg-theme">4</span>
-                        </a>
-                        <ul class="dropdown-menu extended tasks-bar">
-                            <div class="notify-arrow notify-arrow-green"></div>
-                            <li>
-                                <p class="green">You have 4 pending tasks</p>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Bestie Admin Panel</div>
-                                        <div class="percent">40%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                            <span class="sr-only">40% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Database Update</div>
-                                        <div class="percent">60%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (warning)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Product Development</div>
-                                        <div class="percent">80%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                            <span class="sr-only">80% Complete</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Payments Sent</div>
-                                        <div class="percent">70%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-                                            <span class="sr-only">70% Complete (Important)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="external">
-                                <a href="#">See All Tasks</a>
-                            </li>
-                        </ul>
-                    </li>
+               <li> <button type="button" id='transacnotif' class="btn btn-info" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme">
+                  <?php
+                   $notifs = "SELECT * from notifications where notification_type='Admin' and read_at is null";
+                   $notifs_result = mysqli_query($conn, $notifs);
+                   echo mysqli_num_rows($notifs_result); 
+                   ?>
+               </span></button></li>
                     <!-- settings end -->
-                
-                </ul>
+             
                 <!--  notification end -->
             </div>
             <div class="top-menu">
@@ -135,15 +77,13 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
       <!-- **********************************************************************************************************************************************************
       MAIN SIDEBAR MENU
       *********************************************************************************************************************************************************** -->
-       <!--sidebar start-->
-       <!--sidebar start-->
+           <!--sidebar start-->
       <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
               	  <p class="centered"><a href="profile.php"><img src="../assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">BESTIE</h5>
               	  	
                   <li class="mt">
                       <a href="../dashboard.php">
@@ -181,14 +121,12 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                             <i class="fa fa-tasks"></i>
                             <span>View Transactions</span>
                         </a>
-                 
                   <li class="sub-menu">
                       <a href="feedback_log.php" >
                           <i class="fa fa-book"></i>
                           <span>Feedbacks</span>
                       </a>
-                 
-                      
+              
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -201,7 +139,7 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                 <h1> Transactions </h1>
                 <a href='../dashboard.php'> Back to Home </a>
                 <form id = 'searchTransaction' method='POST'>
-                    <select name = 'statusTransac'>
+                    <select name = 'statusTransac' class='form-control'>
                         <option value='all'> All Transactions </option>
                         <option value='on-going'> On Going </option>
                         <option value='done'> Done </option>
@@ -211,138 +149,141 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 
  
 <?php
+
+		$limit = 7;
+		$current_page = 1;
+		if (isset($_GET['page']) && $_GET['page'] > 0) 
+		{
+		    $current_page = $_GET['page'];
+		}
+		$offset = ($current_page * $limit) - $limit;
+
+
+		$viewCust = "CREATE OR REPLACE VIEW customerName AS
+        SELECT 
+		idUser, transaction_status as stat, transaction_id as a,
+        CONCAT(lastName,', ',firstName,' ',middleName) as custName 
+   		FROM
+        transaction
+            inner JOIN
+        user_details on idUser=cust_id where UserType = 'customer';";
+        
+        $viewSp = "CREATE OR REPLACE VIEW serpName AS
+		SELECT 
+		idUser, transaction_status, transaction_id as b,
+        CONCAT(lastName,', ',firstName,' ',middleName) as spName 
+	    FROM
+	        transaction
+	            inner JOIN
+	        user_details on idUser=sp_id
+	    WHERE
+        UserType = 'SP';";
+
+        $allTran = "SELECT 
+				    stat, custName, spName ,a
+					FROM
+				    customerName
+				        inner JOIN
+				    serpName on a=b LIMIT $offset, $limit;";
+
+		$allTranQ = mysqli_query($conn, $allTran); 
+        $viewCustQ = mysqli_query($conn, $viewCust) or die(mysqli_num_rows($conn));
+        $viewSpQ = mysqli_query($conn, $viewSp) or die(mysqli_num_rows($conn));
+
+        $totalrequest = mysqli_num_rows($transactions_result);
+        $pages = ceil($totalrequest/$limit);
+
 		if(isset($_POST['searchTrans'])){
 			if($_POST['statusTransac'] == 'all'){
 				if(mysqli_num_rows($transactions_result) != 0){
-					echo "<table border='1'>";
+					echo "<table class='table table-hover'>";
 					echo  "<tr>";
 					echo  "<th> Service Provider </th>";
 					echo  "<th> Customer </th>";
 					echo  "<th> Status </th>";
 					echo  "<th> Action </th>";
 					echo  "</tr>";
-				while($transaction_arr = mysqli_fetch_array($transactions_result)){
-				//sp
-				$sp_num = $transaction_arr['sp_id'];
-				$nameSp = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$sp_num'";
-				$nameSp_result = mysqli_query($conn, $nameSp) or die(mysqli_error($conn));
-				$sp_arr = mysqli_fetch_array($nameSp_result);
-				//customer
-				$cust_num = $transaction_arr['cust_id'];
-				$nameCust = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$cust_num'";
-				$nameCust_result = mysqli_query($conn, $nameCust) or die(mysqli_error($conn));
-				$cust_arr = mysqli_fetch_array($nameCust_result);
-
-
-				echo "<tr><td>" . $sp_arr['name'] . "</td>";
-				echo "<td>" . $cust_arr['name'] . "</td>";
-				echo "<td>" . $transaction_arr['transaction_status'] . "</td>";
-				echo "<td><a href='view_transaction.php?transaction_id=". $transaction_arr['transaction_id'] . "'>View Details </a></tr>";
+				while($transaction_arr = mysqli_fetch_array($allTranQ)){
+					echo "<tr><td>" . $transaction_arr['custName'] . "</td>";
+					echo "<td>" . $transaction_arr['spName'] . "</td>";
+					echo "<td>" . $transaction_arr['stat'] . "</td>";
+					echo "<td><a href='view_transaction.php?transaction_id=". $transaction_arr['a'] . "'>View Details </a></tr>";
 				}
 				}else{
 					echo "<h1> No transactions </h1>";
 				}
-			}else if(
-				$_POST['statusTransac'] == 'on-going'){
+			}else if($_POST['statusTransac'] == 'on-going'){
 						
 					
-					$newtransac = "SELECT * from transaction where transaction_status = 'ongoing' order by transaction_id desc;";
-					$newtransac_result = mysqli_query($conn, $newtransac);
-					if(mysqli_num_rows($newtransac_result) != 0){
-						echo "<table border='1'>";
+					$allTran = "SELECT 
+				    stat, custName, spName ,a
+					FROM
+				    customerName
+				        inner JOIN
+				    serpName on a=b where stat='ongoing';";
+					$allTranQ = mysqli_query($conn, $allTran) or die(mysqli_num_rows($conn));   
+					if(mysqli_num_rows($transactions_result) != 0){
+						echo "<table class='table table-hover'>";
 						echo  "<tr>";
 						echo  "<th> Service Provider </th>";
 						echo  "<th> Customer </th>";
 						echo  "<th> Status </th>";
 						echo  "<th> Action </th>";
 						echo  "</tr>";
-					while($newtransac_array = mysqli_fetch_array($newtransac_result)){
-						//sp
-						$sp_num = $newtransac_array['sp_id'];
-						$nameSp = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$sp_num'";
-						$nameSp_result = mysqli_query($conn, $nameSp) or die(mysqli_error($conn));
-						$sp_arr = mysqli_fetch_array($nameSp_result);
-						//customer
-						$cust_num = $newtransac_array['cust_id'];
-						$nameCust = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$cust_num'";
-						$nameCust_result = mysqli_query($conn, $nameCust) or die(mysqli_error($conn));
-						$cust_arr = mysqli_fetch_array($nameCust_result);
-
-						
-
-
-						echo "<tr><td>" . $sp_arr['name'] . "</td>";
-						echo "<td>" . $cust_arr['name'] . "</td>";
-						echo "<td>" . $newtransac_array['transaction_status'] . "</td>";
-						echo "<td><a href='view_transaction.php?transaction_id=". $newtransac_array['transaction_id'] . "'>View Details </a></tr>";
+					while($transaction_arr = mysqli_fetch_array($allTranQ)){
+						echo "<tr><td>" . $transaction_arr['custName'] . "</td>";
+						echo "<td>" . $transaction_arr['spName'] . "</td>";
+						echo "<td>" . $transaction_arr['stat'] . "</td>";
+						echo "<td><a href='view_transaction.php?transaction_id=". $transaction_arr['a'] . "'>View Details </a></tr>";
 					}
 				}else{
 				echo "<h1> No on-going transactions </h1>";
 				}
+
 			}else if($_POST['statusTransac'] == 'done'){
-				if(mysqli_num_rows($transactions_result) != 0){
-						echo "<table border='1'>";
+				
+					$allTran = "SELECT 
+				    stat , custName, spName ,a
+					FROM
+				    customerName
+				        inner JOIN
+				    serpName on a=b where stat='done';";
+					$allTranQ = mysqli_query($conn, $allTran) or die(mysqli_num_rows($conn)); 
+					if(mysqli_num_rows($transactions_result) != 0){
+						echo "<table class='table table-hover'>";
 						echo  "<tr>";
 						echo  "<th> Service Provider </th>";
 						echo  "<th> Customer </th>";
 						echo  "<th> Status </th>";
 						echo  "<th> Action </th>";
 						echo  "</tr>";
-					$newtransac_done = "SELECT * from transaction where transaction_status = 'done' order by transaction_id desc;";
-					$newtransac_done_result = mysqli_query($conn, $newtransac_done);
-					while($new_transac_done_array = mysqli_fetch_array($newtransac_done_result)){
-						//sp
-						$sp_num = $new_transac_done_array['sp_id'];
-						$nameSp = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$sp_num'";
-						$nameSp_result = mysqli_query($conn, $nameSp) or die(mysqli_error($conn));
-						$sp_arr = mysqli_fetch_array($nameSp_result);
-						//customer
-						$cust_num = $new_transac_done_array['cust_id'];
-						$nameCust = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$cust_num'";
-						$nameCust_result = mysqli_query($conn, $nameCust) or die(mysqli_error($conn));
-						$cust_arr = mysqli_fetch_array($nameCust_result);
-
-						
-
-						echo "<tr><td>" . $sp_arr['name'] . "</td>";
-						echo "<td>" . $cust_arr['name'] . "</td>";
-						echo "<td>" . $new_transac_done_array['transaction_status'] . "</td>";
-						echo "<td><a href='view_transaction.php?transaction_id=". $new_transac_done_array['transaction_id'] . "'>View Details </a></tr>";
+					while($transaction_arr = mysqli_fetch_array($allTranQ)){
+						echo "<tr><td>" . $transaction_arr['custName'] . "</td>";
+						echo "<td>" . $transaction_arr['spName'] . "</td>";
+						echo "<td>" . $transaction_arr['stat'] . "</td>";
+						echo "<td><a href='view_transaction.php?transaction_id=". $transaction_arr['a'] . "'>View Details </a></tr>";
 					}
 				}else{
-				echo "<h1> No transactions completed </h1>";
+					echo "<h1> No transactions </h1>";
 				}
-			}
+			}	
 		}else{
 			if(mysqli_num_rows($transactions_result) != 0){
-					echo "<table border='1'>";
+					echo "<table class='table table-hover'>";
 					echo  "<tr>";
 					echo  "<th> Service Provider </th>";
 					echo  "<th> Customer </th>";
 					echo  "<th> Status </th>";
 					echo  "<th> Action </th>";
 					echo  "</tr>";
-				while($transaction_arr = mysqli_fetch_array($transactions_result)){
-				//sp
-					$sp_num = $transaction_arr['sp_id'];
-					$nameSp = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$sp_num'";
-					$nameSp_result = mysqli_query($conn, $nameSp) or die(mysqli_error($conn));
-					$sp_arr = mysqli_fetch_array($nameSp_result);
-					//customer
-					$cust_num = $transaction_arr['cust_id'];
-					$nameCust = "SELECT concat(firstName, ' ', middleName, ' ', lastName) as name from user_details where idUser = '$cust_num'";
-					$nameCust_result = mysqli_query($conn, $nameCust) or die(mysqli_error($conn));
-					$cust_arr = mysqli_fetch_array($nameCust_result);
+				while($transaction_arr = mysqli_fetch_array($allTranQ)){
 
-					
+					echo "<tr><td>" . $transaction_arr['spName'] . "</td>";
+					echo "<td>" . $transaction_arr['custName'] . "</td>";
+					echo "<td>" . $transaction_arr['stat'] . "</td>";
+					echo "<td><a href='view_transaction.php?transaction_id=". $transaction_arr['a'] . "'>View Details </a></tr>";
 
-
-					echo "<tr><td>" . $sp_arr['name'] . "</td>";
-					echo "<td>" . $cust_arr['name'] . "</td>";
-					echo "<td>" . $transaction_arr['transaction_status'] . "</td>";
-					echo "<td><a href='view_transaction.php?transaction_id=". $transaction_arr['transaction_id'] . "'>View Details </a></tr>";
-
-			}
+				}
 
 			}else{
 				echo "<h1> No transactions </h1>";
@@ -353,10 +294,71 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 
 		
 	?>
-              </table>
-        </section>
-    </section>
 
+
+</table>
+            <div class="page">
+    	<ul class="pagination">
+	 <!--  <li><a href="#">1</a></li>
+	  <li class="active"><a href="#">2</a></li>
+	  <li><a href="#">3</a></li>
+	  <li><a href="#">4</a></li>
+	  <li><a href="#">5</a></li> -->
+	  	<?php
+			if($current_page == 1){
+				echo "<li class='disabled'><a href='javascipt:void(0)'>&laquo;</a></li>";
+			}else{
+				echo "<li><a href='transactions.php?page=" .($current_page - 1). "'>&laquo;</a></li>";
+			}
+			for($var = 1; $var <= $pages; $var++){
+				echo "<li><a href='transactions.php?page=" .$var. "'>" .$var."</a></li>";
+			}
+			if($current_page == $pages){
+				echo "<li class='disabled'><a href='javascipt:void(0)'>&raquo;</a></li>";
+			}else{
+				$a = $current_page + 1;
+				echo "<li><a href='transactions.php?page=" .($current_page + 1). "'>&raquo;</a></li>";
+			}
+          if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location = 'transactions.php';</script>";
+          }
+
+		?>
+	</ul>
+</div>
+            
+            
+        </section>
+                  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Notifications</h4>
+        </div>
+        <div class="modal-body">
+          <?php
+          $notif = "SELECT * from notifications order by 1 desc limit 8";
+          $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
+          while($arr = mysqli_fetch_array($notif_result)){
+          	echo "<div><a href='manage_users.php'> ".$arr['data']."</a></div><hr>"; 
+          }
+            echo "<a href='view_notif.php'>See more</a>";
+
+
+          ?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+    </section>
+    
  <!-- js placed at the end of the document so the pages load faster -->
     <script src="../assets/js/jquery.js"></script>
     <script src="../assets/js/jquery-1.8.3.min.js"></script>
@@ -378,4 +380,22 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 	<script src="../assets/js/zabuto_calendar.js"></script>	
  
 </body>
+<!-- AJAX UPDATE -->
+<script>
+
+  document.getElementById('transacnotif').onclick = function(){
+if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+}else{// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function(){
+  if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    //do nothing
+    }
+  }
+xmlhttp.open("GET","update_notifications.php",true);
+xmlhttp.send();
+}
+</script>
 </html>
