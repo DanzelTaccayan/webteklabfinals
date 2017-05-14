@@ -1,8 +1,13 @@
 <?php
 include '../shared/connection.php';
-include '../shared/auth.php';
+include 'auth.php';
 $checker = "SELECT * FROM request";
-$checker_r=mysqli_query($conn, $checker);			
+$checker_r=mysqli_query($conn, $checker);	
+
+//notif number
+$notif_num = "SELECT * from notifications where read_at is null";
+$notif_num_result = mysqli_query($conn,$notif_num);
+
 ?>			
 
 <!DOCTYPE html>
@@ -41,7 +46,9 @@ $checker_r=mysqli_query($conn, $checker);
       TOP BAR CONTENT & NOTIFICATIONS
       *********************************************************************************************************************************************************** -->
       <!--header start-->
-             <!--header start-->
+      <!-- **********************************************************************************************************************************************************
+      TOP BAR CONTENT & NOTIFICATIONS
+      *********************************************************************************************************************************************************** -->
       <header class="header black-bg">
               <div class="sidebar-toggle-box">
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
@@ -51,77 +58,15 @@ $checker_r=mysqli_query($conn, $checker);
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
-                    <!-- settings start -->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                            <i class="fa fa-tasks"></i>
-                            <span class="badge bg-theme">4</span>
-                        </a>
-                        <ul class="dropdown-menu extended tasks-bar">
-                            <div class="notify-arrow notify-arrow-green"></div>
-                            <li>
-                                <p class="green">You have 4 pending tasks</p>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Bestie Admin Panel</div>
-                                        <div class="percent">40%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                            <span class="sr-only">40% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Database Update</div>
-                                        <div class="percent">60%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (warning)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Product Development</div>
-                                        <div class="percent">80%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                            <span class="sr-only">80% Complete</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Payments Sent</div>
-                                        <div class="percent">70%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-                                            <span class="sr-only">70% Complete (Important)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="external">
-                                <a href="#">See All Tasks</a>
-                            </li>
-                        </ul>
-                    </li>
+               <li> <button type="button" id='requestlist' class="btn btn-info" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme">
+                  <?php
+                   $notifs = "SELECT * from notifications where notification_type='Admin' and read_at is null";
+                   $notifs_result = mysqli_query($conn, $notifs);
+                   echo mysqli_num_rows($notifs_result); 
+                   ?>
+               </span></button></li>
                     <!-- settings end -->
-                </ul>
+             
                 <!--  notification end -->
             </div>
             <div class="top-menu">
@@ -135,15 +80,14 @@ $checker_r=mysqli_query($conn, $checker);
       <!-- **********************************************************************************************************************************************************
       MAIN SIDEBAR MENU
       *********************************************************************************************************************************************************** -->
-           <!--sidebar start-->
+    <!--sidebar start-->
       <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
               	  <p class="centered"><a href="profile.php"><img src="../assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">BESTIE</h5>
-              	  	
+
                   <li class="mt">
                       <a href="../dashboard.php">
                           <i class="fa fa-dashboard"></i>
@@ -156,7 +100,13 @@ $checker_r=mysqli_query($conn, $checker);
                           <i class="fa fa-desktop"></i>
                           <span>Manage Users</span>
                       </a>
-
+<!--
+                      <ul class="sub">
+                          <li><a  href="general.php">General</a></li>
+                          <li><a  href="buttons.php">Buttons</a></li>
+                          <li><a  href="panels.php">Panels</a></li>
+                      </ul>
+-->
                   </li>
 
                   <li class="sub-menu">
@@ -164,7 +114,7 @@ $checker_r=mysqli_query($conn, $checker);
                           <i class="fa fa-book"></i>
                           <span>Users</span>
                       </a>
-                 <li class="sub-menu">
+                     <li class="sub-menu">
                       <a class="active" href="viewRequests.php" >
                           <i class="fa fa-tasks"></i>
                           <span>View Requests</span>
@@ -179,228 +129,263 @@ $checker_r=mysqli_query($conn, $checker);
                           <i class="fa fa-book"></i>
                           <span>Feedbacks</span>
                       </a>
-                  
+              
               </ul>
               <!-- sidebar menu end-->
           </div>
       </aside>
       <!--sidebar end-->
-            <!-- side bar ends here -->
             
              <section id="main-content">
           <section class="wrapper site-min-height">
 <h1> Requests </h1>
 <form method="POST">
-	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
-	<input type="submit" name="searchButton" value="Search">
+	<select id = 'request' name='requestSearch'>
+		<option value = 'all'> All Requests </option>
+		<option value = 'reject'> Rejected Requests </option>
+		<option value = 'pending'> Pending Requests </option>
+	</select>
+	<input type="submit" name="requestSearchBtn" value="Search">
 </form>
+<table class="table table-hover">
+<tr>
+	<th> Status </th>
+	<th> Requested By </th>
+	<th> Requested To </th>
+	<th> Service Name </th>
+	<th> Request Date </th>
+	<th> Updated At </th>
+
+</tr>
 
 <?php
+		$limit = 7;
+		$current_page = 1;
+		if (isset($_GET['page']) && $_GET['page'] > 0) 
+		{
+		    $current_page = $_GET['page'];
+		}
+		$offset = ($current_page * $limit) - $limit;
 
-if(isset($_POST['requestSearchBtn'])){
+				$query = "CREATE OR REPLACE VIEW theService AS
+    SELECT 
+        service_id AS servID, service_name
+    FROM
+        request
+            NATURAL JOIN
+        services
+    ORDER BY request_date";
+$query2 = "CREATE OR REPLACE VIEW reqByNameAll AS
+    SELECT 
+    	r.idrequest,
+        r.status,
+        r.service_id,
+        r.request_date,
+        r.updated_at,
+        CONCAT(lastName,
+                ', ',
+                firstName,
+                ' ',
+                middleName) AS reqBy
+    FROM
+        user_details
+            JOIN
+        request r
+    WHERE
+        idUser = requested_by
+    ORDER BY request_date";
+$query3 = "CREATE OR REPLACE VIEW reqToTable AS
+    SELECT 
+        CONCAT(lastName,
+                ', ',
+                firstName,
+                ' ',
+                middleName) AS reqTo
+    FROM
+        user_details
+            JOIN
+        request
+    WHERE
+        idUser = requested_to
+    ORDER BY request_date";
+    
+    $query4 = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))";
+
+				$resultQ = mysqli_query($conn, $query) or die(mysqli_error($conn));
+				$resultQ1 = mysqli_query($conn, $query2) or die(mysqli_error($conn));
+				$resultQ2 = mysqli_query($conn, $query3) or die(mysqli_error($conn));
+				$resultQ2 = mysqli_query($conn, $query4) or die(mysqli_error($conn));
+
+				$queryAll = "select * from theService natural join reqbynameall r natural join reqtotable group by idrequest";
+						$theResult = mysqli_query($conn, $queryAll) or die(mysqli_error($conn));
+						$totalrequest = mysqli_num_rows($theResult);
+
+				$paginator = "select * from theService natural join reqbynameall r natural join reqtotable group by 3 LIMIT $offset, $limit";
+						$paginatorQuery = mysqli_query($conn,$paginator) or die(mysqli_error($conn));
+						$pages = ceil($totalrequest/$limit);
+						
+
+
+		if(isset($_POST['requestSearchBtn'])){
 			if($_POST['requestSearch'] == 'all'){
 
-				$query = "Select * from request";
-				$serviceQuery = "Select service_name from request natural join services order by request_date";
-				$reqByQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqBy from user_details join request where idUser = requested_by ORDER BY request_date";
-				$reqToQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqTo from user_details join request where idUser = requested_to ORDER BY request_date";
-				
 
-				$resultQ = mysqli_query($conn, $query) or die(mysqli_error($conn));
-				$resultServiceQ = mysqli_query($conn, $serviceQuery) or die(mysqli_error($conn));
-				$resultReqByQ = mysqli_query($conn, $reqByQuery) or die(mysqli_error($conn));
-				$resultReqToQ = mysqli_query($conn, $reqToQuery) or die(mysqli_error($conn));
-				//pag may laman
-				if(mysqli_num_rows($resultServiceQ) !=0){
-					echo "<table class='table table-hover'>";
-					echo "<tr>";
-					echo "<th> Status </th>";
-					echo "<th> Requested By </th>";
-					echo "<th> Requested To </th>";
-					echo "<th> Service Name </th>";
-					echo "<th> Request Date </th>";
-					echo "<th> Updated At </th>";
-					echo "</tr>";
-
-					while($row = mysqli_fetch_array($resultQ)){
-							$serviceRow = mysqli_fetch_array($resultServiceQ);
-							$reqByRow = mysqli_fetch_array($resultReqByQ);
-							$reqToRow = mysqli_fetch_array($resultReqToQ);
-
-						echo "<tr><td>" . $row['status'] . "</td>";
-								echo "<td>" . $reqByRow['reqBy'] . "</td>";
-								echo "<td>" . $reqToRow['reqTo'] . "</td>";
-								echo "<td>" . $serviceRow['service_name'] . "</td>";
-								echo "<td>" . $row['request_date'] . "</td>";
-								echo "<td>" . $row['updated_at'] . "</td>";
-					}
-				}else{
-					echo "<h1> No Requests </h1>";
-				}
-				
-			}else if($_POST['requestSearch'] == 'reject'){
-				$query = "Select * from request where status = 'reject'";
-				$serviceQuery = "Select service_name from request natural join services order by request_date";
-				$reqByQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqBy from user_details join request where idUser = requested_by ORDER BY request_date";
-				$reqToQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqTo from user_details join request where idUser = requested_to ORDER BY request_date";
-				
-				$resultQ = mysqli_query($conn, $query) or die(mysqli_error($conn));
-				$resultServiceQ = mysqli_query($conn, $serviceQuery) or die(mysqli_error($conn));
-				$resultReqByQ = mysqli_query($conn, $reqByQuery) or die(mysqli_error($conn));
-				$resultReqToQ = mysqli_query($conn, $reqToQuery) or die(mysqli_error($conn));
-				if(mysqli_num_rows($resultQ) !=0){
-					echo "<table class='table table-hover'>";
-					echo "<tr>";
-					echo "<th> Status </th>";
-					echo "<th> Requested By </th>";
-					echo "<th> Requested To </th>";
-					echo "<th> Service Name </th>";
-					echo "<th> Request Date </th>";
-					echo "<th> Updated At </th>";
-					echo "</tr>";					
-					while($row = mysqli_fetch_array($resultQ)){
-						$serviceRow = mysqli_fetch_array($resultServiceQ);
-						$reqByRow = mysqli_fetch_array($resultReqByQ);
-						$reqToRow = mysqli_fetch_array($resultReqToQ);
-
+				while($row = mysqli_fetch_array($paginatorQuery)){
 					echo "<tr><td>" . $row['status'] . "</td>";
-							echo "<td>" . $reqByRow['reqBy'] . "</td>";
-							echo "<td>" . $reqToRow['reqTo'] . "</td>";
-							echo "<td>" . $serviceRow['service_name'] . "</td>";
+							echo "<td>" . $row['reqBy'] . "</td>";
+							echo "<td>" . $row['reqTo'] . "</td>";
+							echo "<td>" . $row['service_name'] . "</td>";
 							echo "<td>" . $row['request_date'] . "</td>";
 							echo "<td>" . $row['updated_at'] . "</td>";
-					}
-
-				}else{
-					echo "<h1> No Rejected Request </h1>";
 				}
-				
+								echo "<a href = 'viewRequests.php'> See All </a>";
+
+?> 
+<ul>
+		 <!--  <li><a href="#">1</a></li>
+		  <li class="active"><a href="#">2</a></li>
+		  <li><a href="#">3</a></li>
+		  <li><a href="#">4</a></li>
+		  <li><a href="#">5</a></li> -->
+		  	<?php
+				if($current_page == 1){
+					echo "<li class='disabled'><a href='javascipt:void(0)'>&laquo;</a></li>";
+				}else{
+					echo "<li><a href='viewRequests.php?page=" .($current_page - 1). "'>&laquo;</a></li>";
+				}
+				for($var = 1; $var <= $pages; $var++){
+					echo "<li><a href='viewRequests.php?page=" .$var. "'>" .$var."</a></li>";
+				}
+				if($current_page == $pages){
+					echo "<li class='disabled'><a href='javascipt:void(0)'>&raquo;</a></li>";
+				}else{
+					$a = $current_page + 1;
+					echo "<li><a href='viewRequests.php?page=" .$a. "'>&raquo;</a></li>";
+				}
+          if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location='viewRequests.php'</script>";
+          }
+
+			?>
+		</ul>
+
+
+<?php
+			}else if($_POST['requestSearch'] == 'reject'){
+
+				$queryAll = "select * from theService natural join reqbynameall r natural join reqtotable where status = 'reject' group by idrequest";
+						$theResult = mysqli_query($conn, $queryAll) or die(mysqli_error($conn));
+
+
+				while($row = mysqli_fetch_array($theResult)){
+
+					echo "<tr><td>" . $row['status'] . "</td>";
+							echo "<td>" . $row['reqBy'] . "</td>";
+							echo "<td>" . $row['reqTo'] . "</td>";
+							echo "<td>" . $row['service_name'] . "</td>";
+							echo "<td>" . $row['request_date'] . "</td>";
+							echo "<td>" . $row['updated_at'] . "</td>";
+				}
+							echo "<a href = 'viewRequests.php'> See All </a>";
+
 			}else if($_POST['requestSearch'] == 'pending'){
-				$query = "Select * from request where status = 'pending'";
-				$serviceQuery = "Select service_name from request natural join services order by request_date";
-				$reqByQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqBy from user_details join request where idUser = requested_by ORDER BY request_date";
-				$reqToQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqTo from user_details join request where idUser = requested_to ORDER BY request_date";
+								$queryAll = "select * from theService natural join reqbynameall r natural join reqtotable where status = 'pending' group by idrequest";
+						$theResult = mysqli_query($conn, $queryAll) or die(mysqli_error($conn));
 
-				$resultQ = mysqli_query($conn, $query) or die(mysqli_error($conn));
-				$resultServiceQ = mysqli_query($conn, $serviceQuery) or die(mysqli_error($conn));
-				$resultReqByQ = mysqli_query($conn, $reqByQuery) or die(mysqli_error($conn));
-				$resultReqToQ = mysqli_query($conn, $reqToQuery) or die(mysqli_error($conn));
-				if(mysqli_num_rows($resultQ) != 0){
-					echo "<table border='1'>";
-					echo "<tr>";
-					echo "<th> Status </th>";
-					echo "<th> Requested By </th>";
-					echo "<th> Requested To </th>";
-					echo "<th> Service Name </th>";
-					echo "<th> Request Date </th>";
-					echo "<th> Updated At </th>";
-					echo "</tr>";
-					while($row = mysqli_fetch_array($resultQ)){
-							$serviceRow = mysqli_fetch_array($resultServiceQ);
-							$reqByRow = mysqli_fetch_array($resultReqByQ);
-							$reqToRow = mysqli_fetch_array($resultReqToQ);
 
-						echo "<tr><td>" . $row['status'] . "</td>";
-								echo "<td>" . $reqByRow['reqBy'] . "</td>";
-								echo "<td>" . $reqToRow['reqTo'] . "</td>";
-								echo "<td>" . $serviceRow['service_name'] . "</td>";
-								echo "<td>" . $row['request_date'] . "</td>";
-								echo "<td>" . $row['updated_at'] . "</td>";
-					}
-				}else{
-					echo "<h1> No Pending Requests </h1>";
-					
+				while($row = mysqli_fetch_array($theResult)){
+
+					echo "<tr><td>" . $row['status'] . "</td>";
+							echo "<td>" . $row['reqBy'] . "</td>";
+							echo "<td>" . $row['reqTo'] . "</td>";
+							echo "<td>" . $row['service_name'] . "</td>";
+							echo "<td>" . $row['request_date'] . "</td>";
+							echo "<td>" . $row['updated_at'] . "</td>";
 				}
 				echo "</tr>";
-			}else if($_POST['requestSearch'] == 'approve'){
-				$query = "Select * from request where status = 'approve'";
-				$serviceQuery = "Select service_name from request natural join services order by request_date";
-				$reqByQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqBy from user_details join request where idUser = requested_by ORDER BY request_date";
-				$reqToQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqTo from user_details join request where idUser = requested_to ORDER BY request_date";
-
-				$resultQ = mysqli_query($conn, $query) or die(mysqli_error($conn));
-				$resultServiceQ = mysqli_query($conn, $serviceQuery) or die(mysqli_error($conn));
-				$resultReqByQ = mysqli_query($conn, $reqByQuery) or die(mysqli_error($conn));
-				$resultReqToQ = mysqli_query($conn, $reqToQuery) or die(mysqli_error($conn));
-				if(mysqli_num_rows($resultQ) != 0){
-					echo "<table class='table table-hover'>";
-					echo "<tr>";
-					echo "<th> Status </th>";
-					echo "<th> Requested By </th>";
-					echo "<th> Requested To </th>";
-					echo "<th> Service Name </th>";
-					echo "<th> Request Date </th>";
-					echo "<th> Updated At </th>";
-					echo "</tr>";
-					while($row = mysqli_fetch_array($resultQ)){
-							$serviceRow = mysqli_fetch_array($resultServiceQ);
-							$reqByRow = mysqli_fetch_array($resultReqByQ);
-							$reqToRow = mysqli_fetch_array($resultReqToQ);
-
-						echo "<tr><td>" . $row['status'] . "</td>";
-								echo "<td>" . $reqByRow['reqBy'] . "</td>";
-								echo "<td>" . $reqToRow['reqTo'] . "</td>";
-								echo "<td>" . $serviceRow['service_name'] . "</td>";
-								echo "<td>" . $row['request_date'] . "</td>";
-								echo "<td>" . $row['updated_at'] . "</td>";
-					}
-				}else{
-					echo "<h1> No Approved Requests </h1>";
-					
-				}
-				echo "</tr>";
+				echo "<a href = 'viewRequests.php'> See All </a>";
 			}
-			
-}else{
-	if(mysqli_num_rows($checker_r) != 0){
-		$query = "Select * from request";
-				$serviceQuery = "Select service_name from request natural join services order by request_date";
-				$reqByQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqBy from user_details join request where idUser = requested_by ORDER BY request_date";
-				$reqToQuery = "Select CONCAT(firstName,' ',middleName,' ',lastName) as reqTo from user_details join request where idUser = requested_to ORDER BY request_date";
-				
 
-				$resultQ = mysqli_query($conn, $query) or die(mysqli_error($conn));
-				$resultServiceQ = mysqli_query($conn, $serviceQuery) or die(mysqli_error($conn));
-				$resultReqByQ = mysqli_query($conn, $reqByQuery) or die(mysqli_error($conn));
-				$resultReqToQ = mysqli_query($conn, $reqToQuery) or die(mysqli_error($conn));
-				//pag may laman
-				if(mysqli_num_rows($resultServiceQ) !=0){
-					echo "<table class='table table-hover'>";
-					echo "<tr>";
-					echo "<th> Status </th>";
-					echo "<th> Requested By </th>";
-					echo "<th> Requested To </th>";
-					echo "<th> Service Name </th>";
-					echo "<th> Request Date </th>";
-					echo "<th> Updated At </th>";
-					echo "</tr>";
+		}else{
 
-					while($row = mysqli_fetch_array($resultQ)){
-							$serviceRow = mysqli_fetch_array($resultServiceQ);
-							$reqByRow = mysqli_fetch_array($resultReqByQ);
-							$reqToRow = mysqli_fetch_array($resultReqToQ);
 
-						echo "<tr><td>" . $row['status'] . "</td>";
-								echo "<td>" . $reqByRow['reqBy'] . "</td>";
-								echo "<td>" . $reqToRow['reqTo'] . "</td>";
-								echo "<td>" . $serviceRow['service_name'] . "</td>";
-								echo "<td>" . $row['request_date'] . "</td>";
-								echo "<td>" . $row['updated_at'] . "</td>";
-					}
-				}else{
-					echo "<h1> No Requests </h1>";
-				}
-	}
-	echo "</tr>";
-}
 
-	?>
+			while($row = mysqli_fetch_array($paginatorQuery)){
+				echo "<tr><td>" . $row['status'] . "</td>";
+						echo "<td>" . $row['reqBy'] . "</td>";
+						echo "<td>" . $row['reqTo'] . "</td>";
+						echo "<td>" . $row['service_name'] . "</td>";
+						echo "<td>" . $row['request_date'] . "</td>";
+						echo "<td>" . $row['updated_at'] . "</td>";
+			}
+?> 
 
+        
+            </section>
                  </section>
             </section>
-    </section>
+                  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
     
-    <!-- js placed at the end of the document so the pages load faster -->
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Notifications</h4>
+        </div>
+        <div class="modal-body">
+          <?php
+          $notif = "SELECT * from notifications order by 1 desc limit 8";
+          $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
+          while($arr = mysqli_fetch_array($notif_result)){
+          	echo "<div><a href='manage_users.php'> ".$arr['data']."</a></div><hr>"; 
+          }
+            echo "<a href='view_notif.php'>See more</a>";
+
+
+
+          ?>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+      <div class="page">
+<ul class="pagination">
+		  	<?php
+				if($current_page == 1){
+					echo "<li class='disabled'><a href='javascipt:void(0)'>&laquo;</a></li>";
+				}else{
+					echo "<li><a href='viewRequests.php?page=" .($current_page - 1). "'>&laquo;</a></li>";
+				}
+				for($var = 1; $var <= $pages; $var++){
+					echo "<li><a href='viewRequests.php?page=" .$var. "'>" .$var."</a></li>";
+				}
+				if($current_page == $pages){
+					echo "<li class='disabled'><a href='javascipt:void(0)'>&raquo;</a></li>";
+				}else{
+					$a = $current_page + 1;
+					echo "<li><a href='viewRequests.php?page=" .$a. "'>&raquo;</a></li>";
+				}
+          if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location='viewRequests.php'</script>";
+          }
+
+			?>
+<?php
+		}
+		
+		echo "</tr>";
+	?>
+        </ul>
+    </div>
+         
+    
+<!-- js placed at the end of the document so the pages load faster -->
     <script src="../assets/js/jquery.js"></script>
     <script src="../assets/js/jquery-1.8.3.min.js"></script>
     <script src="../assets/js/bootstrap.min.js"></script>
@@ -418,7 +403,25 @@ if(isset($_POST['requestSearchBtn'])){
 
     <!--script for this page-->
     <script src="../assets/js/sparkline-chart.js"></script>    
-	<script src="../assets/js/zabuto_calendar.js"></script>	
+	<script src="../assets/js/zabuto_calendar.js"></script>
 
 </body>
+<!-- AJAX UPDATE -->
+<script>
+
+  document.getElementById('requestlist').onclick = function (){
+if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+}else{// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function(){
+  if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    //do nothing
+    }
+  }
+xmlhttp.open("GET","update_notifications.php",true);
+xmlhttp.send();
+}
+</script>
 </html>
