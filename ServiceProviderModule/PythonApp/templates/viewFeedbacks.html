@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <table border = "1">
+    	<thead>
+    		<th>Sender</th>
+    		<th>Recepient</th>
+    		<th>Content</th>
+    		<th>Feedback ID</th>
+            <th>Feedback Date</th>
+    	</thead>
+    	<tbody>
+    		{% for row in feedbacks %}
+    		<tr>
+				<td>{{row[0]}}</td>
+    			<td>{{row[1]}}</td>
+    			<td>{{row[2]}}</td>
+    			<td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+</body>
+
+</html>

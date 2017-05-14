@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>
+		Sample
+		</title>
+
+	<body>
+	<table border = 1>
+		<thead>
+			<th>Service ID</th>
+			<th>Service Name</th>
+			<th>Created At</th>
+			<th>Service Description</th>
+			<th>SP Id</th>
+			<th>Action</th>
+		</thead>
+		<tbody>
+			{% for row in data %}
+    		<tr>
+     			<form action ='/deleteservices' method = 'POST'>
+     			<td>{{row[0]}}</td>
+     			<td>{{row[1]}}</td>
+     			<td>{{row[2]}}</td>
+     			<td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td><button name = 'delete' value="{{row[0]}}">Delete Service</button>
+     			</form>
+     		</tr>
+     		{% endfor %}
+    	</tbody>
+		</tbody>
+	</body>
+</html>
