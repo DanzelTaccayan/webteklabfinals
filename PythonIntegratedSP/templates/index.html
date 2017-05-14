@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My title</title>
+</head>
+
+<body>
+    <table>
+    	<thead>
+    		<th>Service name</th>
+    		<th>Created At</th>
+    		<th>Time Needed</th>
+    		<th>Service Description</th>
+    		<th>Action</th>
+    	</thead>
+    	<tbody>
+    		{% for row in data %}
+    		<tr>
+    			<form action ='/' method = 'GET'>
+    			<td>{{row[0]}}</td>
+    			<td>{{row[1]}}</td>
+    			<td>{{row[2]}}</td>
+    			<td>{{row[3]}}</td>
+    			<td><button name = 'mybut' value ="12341s">Try Me</button>
+    			</form>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+</body>
+
+</html>
