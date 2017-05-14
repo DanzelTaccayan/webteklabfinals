@@ -257,6 +257,39 @@ def editprofile():
 	return render_template('dashboard.html')
 	cursor.close()	
 	conn.close()
+#=======================CHAT===================================
+@app.route('/chat')
+def chat():
+	query = "SELECT * from message"
+	cursor.execute(query)	
+	data = cursor.fetchall()
+	conn.commit()
+
+	return render_template('chat.html', data=data)
+	cursor.close()
+	conn.close()
+@app.route('/chatview')
+def chatview():
+	idChat = request.args.get('butt')
+	query = "SELECT message from message where message_id = '%s'" %idChat
+	cursor.execute(query)
+	data = cursor.fetchall()
+	conn.commit()
+
+	return render_template("chatview.html",data=data)
+	conn.close()
+	cursor.close()
+@app.route('/chatsend')
+def chatsend():
+	send = request_form['send']
+	query = "INSERT INTO message (message_id, message, sender, recipient, created_at, updated_at) VALUES ('5', '%s', '8', '4', 'now', 'now()');" %send
+	cursor.execute(query)
+	data = cursor.fetchall()
+	conn.commit()
+
+	return redirect('/chat')	
+	cursor.close()
+	conn.close()
 
 
 if __name__ == '__main__':
