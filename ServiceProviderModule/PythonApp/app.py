@@ -232,7 +232,32 @@ def deleteServices():
 
 	cursor.close();
 	conn.close()	
-	
+#=======================EDIT PROFILE==========================
+@app.route('/editprof')
+def editprof():
+	return render_template('editprofile.html')
+
+@app.route('/editprofile',methods =	['POST'])
+def editprofile():
+
+	query = "SELECT * from user_details where idUser = '12'"
+	firstName = request.form['fname']
+	middleName = request.form['mname']
+	lastName = request.form['lname']
+	address = request.form['address']
+	email = request.form['email']
+	contactNum = request.form['contactnumber']
+	company = request.form['company']
+	errors = 0
+
+	query2 = "UPDATE user_details SET firstName='%s', middleName='%s', lastName='%s', address='%s', email='%s', contactNumber='%s', company='%s' WHERE `idUser`='12';" %(firstName,middleName,lastName,address,email,contactNum,company)
+	cursor.execute(query2)
+	conn.commit()
+
+	return render_template('dashboard.html')
+	cursor.close()	
+	conn.close()
+
 
 if __name__ == '__main__':
 	app.run(host='localhost', debug=True)
