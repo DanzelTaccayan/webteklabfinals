@@ -1,6 +1,6 @@
 <?php
 include '../shared/connection.php';
-include '../shared/auth.php';
+include 'auth.php';
 
 //notif number
 $notif_num = "SELECT * from notifications where read_at is null";
@@ -52,7 +52,13 @@ if (isset($_POST['searchUser'])) {
             <a href="index.html" class="logo"><b>BESTIE SALON</b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
-                  <li> <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme"><?php echo mysqli_num_rows($notif_num_result);?></span></button></li>
+                  <li> <button type="button" id = 'usersnotif' class="btn btn-info" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme">
+                    <?php
+                   $notifs = "SELECT * from notifications where notification_type='Admin' and read_at is null";
+                   $notifs_result = mysqli_query($conn, $notifs);
+                   echo mysqli_num_rows($notifs_result); 
+                   ?>
+                  </span></button></li>
                 <!--  notification end -->
             </div>
             <div class="top-menu">
@@ -73,7 +79,6 @@ if (isset($_POST['searchUser'])) {
               <ul class="sidebar-menu" id="nav-accordion">
               
               	  <p class="centered"><a href="profile.php"><img src="../assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">BESTIE</h5>
               	  	
                   <li class="mt">
                       <a href="../dashboard.php">
@@ -144,7 +149,7 @@ if (isset($_POST['searchUser'])) {
               
 <h1> Manage Users </h1>
 <form method="POST">
-	<input type="text" name="searchUser" placeholder="ID/Username/Name/Status/company">
+	<input type="text" name="searchUser" placeholder="Search box">
 	<input type="submit" name="searchButton" value="Search">
 </form>
         
@@ -158,7 +163,7 @@ if (isset($_GET['page']) && $_GET['page'] > 0)
 $offset = ($current_page * $limit) - $limit;
 
 $user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin';";
-$pagination = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' LIMIT $offset, $limit ;";	
+$pagination = "select idUsers, username, status, UserType, CONCAT(lastName,', ',firstName,' ',middleName) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' ORDER BY created_at desc LIMIT $offset, $limit ;";	
 $paginationQ = mysqli_query($conn, $pagination) or die(mysqli_error($conn));
 $user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
 
@@ -168,9 +173,8 @@ $pages = ceil($totalrequest/$limit);
 	if (isset($_POST['searchButton'])) {
 		$user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' and (username like '%".$searchUser."%' or status like '%".$searchUser."%' or UserType like '%".$searchUser."%' or concat(firstname, ' ', middlename, ' ', lastname) like '%".$searchUser."%' or company like '%".$searchUser."%');";
 		$user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
-		if(mysqli_num_rows($user_result) != 0){
-			while($user_arr = mysqli_fetch_array($user_result)){
-				echo "<table border='1'>";
+		if(mysqli_num_rows($user_result) != 0){	
+            echo "<table class='table table-hover'>";
 				echo "<tr>";
 				echo "<th> Username </th>";
 				echo "<th> Account Status </th>";
@@ -182,6 +186,8 @@ $pages = ceil($totalrequest/$limit);
 				echo "<th> Company </th>";
 				echo "<th> Action </th>";
 				echo "</tr>";
+			while($user_arr = mysqli_fetch_array($user_result)){
+			
 				echo "<tr><td>" . $user_arr['username'] . "</td>";
 				echo "<td>" . $user_arr['status'] . "</td>";
 				if($user_arr['UserType'] == 'SP'){
@@ -328,6 +334,10 @@ $pages = ceil($totalrequest/$limit);
 					}else{
 						echo "<li><a href='manage_users.php?page=" .($current_page + 1). "'>&raquo;</a></li>";
 					}
+                    if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location = 'manage_users.php';</script>";
+          }
+
 				?>
 	</ul>
     </div>
@@ -349,13 +359,10 @@ $pages = ceil($totalrequest/$limit);
           $notif = "SELECT * from notifications order by 1 desc limit 8";
           $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
           while($arr = mysqli_fetch_array($notif_result)){
-          	echo "<div><a href='./admin/manage_users.php'> ".$arr['data']."</a></div><hr>"; 
+          	echo "<div><a href='.admin/manage_users.php'> ".$arr['data']."</a></div><hr>"; 
           }
             echo "<a href='view_notif.php'>See more</a>";
 
-
-          $update = "UPDATE notifications SET read_at=now() WHERE read_at is null";
-          $update_result = mysqli_query($conn, $update) or die(mysqli_error($conn));
 
           ?>
         </div>
@@ -388,4 +395,23 @@ $pages = ceil($totalrequest/$limit);
 	<script src="../assets/js/zabuto_calendar.js"></script>	
  
 </body>
+<!-- AJAX UPDATE -->
+<script>
+
+  document.getElementById('usersnotif').onclick = function(){
+if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+}else{// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function(){
+  if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    //do nothing
+    }
+  }
+xmlhttp.open("GET","update_notifications.php",true);
+xmlhttp.send();
+}
+
+</script>
 </html>
