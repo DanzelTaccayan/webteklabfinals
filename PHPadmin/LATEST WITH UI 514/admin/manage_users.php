@@ -163,7 +163,7 @@ if (isset($_GET['page']) && $_GET['page'] > 0)
 $offset = ($current_page * $limit) - $limit;
 
 $user_qry = "select idUsers, username, status, UserType, concat(firstname, ' ', middlename, ' ', lastname) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin';";
-$pagination = "select idUsers, username, status, UserType, CONCAT(lastName,', ',firstName,' ',middleName) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' ORDER BY created_at desc LIMIT $offset, $limit ;";	
+$pagination = "select idUsers, username, status, UserType, CONCAT(lastName,', ',firstName,' ',middleName) as name, address, email, contactnumber, company from users inner join user_details on idUser = idUsers where usertype!='admin' ORDER BY idUser desc LIMIT $offset, $limit ;";	
 $paginationQ = mysqli_query($conn, $pagination) or die(mysqli_error($conn));
 $user_result = mysqli_query($conn, $user_qry) or die(mysqli_error($conn));
 
