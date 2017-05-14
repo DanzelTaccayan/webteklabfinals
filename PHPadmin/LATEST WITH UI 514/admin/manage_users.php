@@ -268,6 +268,37 @@ $pages = ceil($totalrequest/$limit);
 			}
 		echo "</tr>";
 		echo "</table>";
+    ?>
+    <div class="page">
+  <ul class="pagination">
+       <!--  <li><a href="#">1</a></li>
+        <li class="active"><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li> -->
+        <?php
+          if($current_page == 1){
+            echo "<li class='disabled'><a href='javascipt:void(0)'>&laquo;</li>";
+          }else{
+            echo "<li><a href='manage_users.php?page=" .($current_page - 1). "'>&laquo;</a></li>";
+          }
+          for($var = 1; $var <= $pages; $var++){
+            echo "<li><a href='manage_users.php?page=" .$var. "'>" .$var."</a></li>";
+          }
+          if($current_page == $pages){
+            echo "<li class='disabled'><a href='javascipt:void(0)'>&raquo;</a></li>";
+          }else{
+            echo "<li><a href='manage_users.php?page=" .($current_page + 1). "'>&raquo;</a></li>";
+          }
+                    if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location = 'manage_users.php';</script>";
+          }
+
+        ?>
+  </ul>
+    </div>
+    <?php
+
 		}else{
 			echo "<h1> No User/s Found </h1>";
 		}	
@@ -313,34 +344,6 @@ $pages = ceil($totalrequest/$limit);
         	    }
          	}
 ?>
-    <div class="page">
-	<ul class="pagination">
-			 <!--  <li><a href="#">1</a></li>
-			  <li class="active"><a href="#">2</a></li>
-			  <li><a href="#">3</a></li>
-			  <li><a href="#">4</a></li>
-			  <li><a href="#">5</a></li> -->
-				<?php
-					if($current_page == 1){
-						echo "<li class='disabled'><a href='javascipt:void(0)'>&laquo;</li>";
-					}else{
-						echo "<li><a href='manage_users.php?page=" .($current_page - 1). "'>&laquo;</a></li>";
-					}
-					for($var = 1; $var <= $pages; $var++){
-						echo "<li><a href='manage_users.php?page=" .$var. "'>" .$var."</a></li>";
-					}
-					if($current_page == $pages){
-						echo "<li class='disabled'><a href='javascipt:void(0)'>&raquo;</a></li>";
-					}else{
-						echo "<li><a href='manage_users.php?page=" .($current_page + 1). "'>&raquo;</a></li>";
-					}
-                    if ($current_page > $pages) {
-            echo "<script> alert('Invalid page!'); window.location = 'manage_users.php';</script>";
-          }
-
-				?>
-	</ul>
-    </div>
                         </section>
         </section>
     </section>
