@@ -1,13 +1,17 @@
 <?php
 include '../shared/connection.php';
-include '../shared/auth.php';
+include 'auth.php';
 $transactions = "SELECT * from transaction order by transaction_id desc;";
 $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($conn));
+
+//notif number
+$notif_num = "SELECT * from notifications where read_at is null";
+$notif_num_result = mysqli_query($conn,$notif_num);
 ?>
 
 <html>
 <head>
-	 <meta charset="utf-8">
+   <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Dashboard">
@@ -34,12 +38,11 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
 
 </head>
 <body>
-   	<section id="container" >
+    <section id="container" >
       <!-- **********************************************************************************************************************************************************
       TOP BAR CONTENT & NOTIFICATIONS
       *********************************************************************************************************************************************************** -->
-   <!--header start-->
-      <header class="header black-bg">
+    <header class="header black-bg">
               <div class="sidebar-toggle-box">
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
@@ -48,84 +51,22 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
-                    <!-- settings start -->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                            <i class="fa fa-tasks"></i>
-                            <span class="badge bg-theme">4</span>
-                        </a>
-                        <ul class="dropdown-menu extended tasks-bar">
-                            <div class="notify-arrow notify-arrow-green"></div>
-                            <li>
-                                <p class="green">You have 4 pending tasks</p>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Bestie Admin Panel</div>
-                                        <div class="percent">40%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                            <span class="sr-only">40% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Database Update</div>
-                                        <div class="percent">60%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (warning)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Product Development</div>
-                                        <div class="percent">80%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                            <span class="sr-only">80% Complete</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <div class="task-info">
-                                        <div class="desc">Payments Sent</div>
-                                        <div class="percent">70%</div>
-                                    </div>
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-                                            <span class="sr-only">70% Complete (Important)</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="external">
-                                <a href="#">See All Tasks</a>
-                            </li>
-                        </ul>
-                    </li>
+               <li> <button type="button" class="btn btn-info" id = "viewnotif" data-toggle="modal" data-target="#myModal" style='float:right;'><i class="fa fa-tasks"></i><span class="badge bg-theme">
+                                  <?php
+                   $notifs = "SELECT * from notifications where notification_type='Admin' and read_at is null";
+                   $notifs_result = mysqli_query($conn, $notifs);
+                   echo mysqli_num_rows($notifs_result); 
+                   ?>
+
+               </span></button></li>
                     <!-- settings end -->
-                    <!-- inbox dropdown end -->
-                </ul>
+             
                 <!--  notification end -->
             </div>
             <div class="top-menu">
-            	<ul class="nav pull-right top-menu">
+              <ul class="nav pull-right top-menu">
                     <li><a class="logout" href="../logout.php">Logout</a></li>
-            	</ul>
+              </ul>
             </div>
         </header>
       <!--header end-->
@@ -133,15 +74,14 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
       <!-- **********************************************************************************************************************************************************
       MAIN SIDEBAR MENU
       *********************************************************************************************************************************************************** -->
-       <!--sidebar start-->
+           <!--sidebar start-->
       <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-              	  <p class="centered"><a href="profile.php"><img src="../assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">BESTIE</h5>
-              	  	
+                  <p class="centered"><a href="profile.php"><img src="../assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
+                    
                   <li class="mt">
                       <a href="../dashboard.php">
                           <i class="fa fa-dashboard"></i>
@@ -174,39 +114,57 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
                           <span>View Requests</span>
                       </a>
                     <li class="sub-menu">
-                        <a class="active" href="transactions.php">
+                        <a href="transactions.php">
                             <i class="fa fa-tasks"></i>
                             <span>View Transactions</span>
                         </a>
-                 
                   <li class="sub-menu">
                       <a href="feedback_log.php" >
                           <i class="fa fa-book"></i>
                           <span>Feedbacks</span>
                       </a>
-                 
-                      
+              
               </ul>
               <!-- sidebar menu end-->
           </div>
-      </aside>>
+      </aside>
+      <!--sidebar end-->
         <section id="main-content">
           <section class="wrapper site-min-height">
                 <h1> Notification </h1>
-        <?php
+<?php
+        $limit = 8;
+        $current_page = 1;
+        if (isset($_GET['page']) && $_GET['page'] > 0) 
+        {
+            $current_page = $_GET['page'];
+        }
+        $offset = ($current_page * $limit) - $limit;
+
+
         $notif_num = "SELECT * from notifications where read_at is null";
         $notif_num_result = mysqli_query($conn,$notif_num);
 
 
           $notif = "SELECT * from notifications order by 1 desc";
           $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
-          while($arr = mysqli_fetch_array($notif_result)){
-          	echo "<div><a href='manage_users.php'> ".$arr['data']."</a></div><hr>"; 
+          $totalrequest = mysqli_num_rows($notif_result);
+
+
+
+          $paginator = "SELECT * from notifications order by 1 desc LIMIT $offset, $limit";
+
+          $paginatorQuery = mysqli_query($conn,$paginator) or die(mysqli_error($conn));
+          $pages = ceil($totalrequest/$limit);
+
+        $notif_num = "SELECT * from notifications where read_at is null";
+        $notif_num_result = mysqli_query($conn,$notif_num);
+
+          while($arr = mysqli_fetch_array($paginatorQuery)){
+            echo "<div><a href='manage_users.php'> ".$arr['data']."</a></div><hr>"; 
           } 
         echo "<a href='../dashboard.php'>Back</a>";
 
-          $update = "UPDATE notifications SET read_at=now() WHERE read_at is null";
-          $update_result = mysqli_query($conn, $update) or die(mysqli_error($conn));
 ?>
               
               <div class="modal fade" id="myModal" role="dialog">
@@ -223,13 +181,11 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
           $notif = "SELECT * from notifications order by 1 desc limit 8";
           $notif_result = mysqli_query($conn,$notif) or die(mysqli_error($conn));
           while($arr = mysqli_fetch_array($notif_result)){
-          	echo "<div><a href='./admin/manage_users.php'> ".$arr['data']."</a></div><hr>"; 
+            echo "<div><a href='manage_users.php'> ".$arr['data']."</a></div><hr>"; 
           }
-            echo "<a href='./admin/view_notif.php'>See more</a>";
+            echo "<a href='view_notif.php'>See more</a>";
 
 
-          $update = "UPDATE notifications SET read_at=now() WHERE read_at is null";
-          $update_result = mysqli_query($conn, $update) or die(mysqli_error($conn));
 
           ?>
         </div>
@@ -254,9 +210,55 @@ $transactions_result = mysqli_query($conn, $transactions) or die(mysqli_error($c
     <script src="../assets/js/common-scripts.js"></script>
     
     <!--script for this page-->
-    <script src="../assets/js/zabuto_calendar.js"></script>	
+    <script src="../assets/js/zabuto_calendar.js"></script> 
     <!-- FOR CALLENDAR -->
-    <script type="application/javascript">
+    <script type="application/javascript"></script>
+    <ul>
+       <!--  <li><a href="#">1</a></li>
+        <li class="active"><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li> -->
+          <?php
+          if($current_page == 1){
+            echo "<li class='disabled'><a href='javascipt:void(0)'>&laquo;</a></li>";
+          }else{
+            echo "<li><a href='view_notif.php?page=" .($current_page - 1). "'>&laquo;</a></li>";
+          }
+          for($var = 1; $var <= $pages; $var++){
+            echo "<li><a href='view_notif.php?page=" .$var. "'>" .$var."</a></li>";
+          }
+          if($current_page == $pages){
+            echo "<li class='disabled'><a href='javascipt:void(0)'>&raquo;</a></li>";
+          }else{
+            $a = $current_page + 1;
+            echo "<li><a href='view_notif.php?page=" .$a. "'>&raquo;</a></li>";
+          }
+          if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location='view_notif.php'</script>";
+          }
+        ?>
+      </ul>
+
+
+    <script>
+
+ document.getElementById('viewnotif').onclick = function (){
+if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+}else{// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function(){
+  if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    //do nothing
+    }
+  }
+xmlhttp.open("GET","update_notifications.php",true);
+xmlhttp.send();
+}
+</script>
+
     </body>
     </html>
     
