@@ -217,6 +217,8 @@ $pages = ceil($totalrequest/$limit);
 			}
 			echo "</tr>";
 			echo "</table>";
+    echo "<a href='manage_users.php'> See All </a>";
+
 		}else{
 			echo "<h1> No User Found! </h1>";
 		}
@@ -290,9 +292,6 @@ $pages = ceil($totalrequest/$limit);
           }else{
             echo "<li><a href='manage_users.php?page=" .($current_page + 1). "'>&raquo;</a></li>";
           }
-                    if ($current_page > $pages) {
-            echo "<script> alert('Invalid page!'); window.location = 'manage_users.php';</script>";
-          }
 
         ?>
   </ul>
@@ -300,6 +299,10 @@ $pages = ceil($totalrequest/$limit);
     <?php
 
 		}else{
+                 if ($current_page > $pages) {
+            echo "<script> alert('Invalid page!'); window.location = 'manage_users.php';</script>";
+          }
+
 			echo "<h1> No User/s Found </h1>";
 		}	
 		}
