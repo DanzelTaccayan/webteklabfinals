@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Message</title>
+</head>
+<body>
+<table border=1>
+    <thead>
+    	<th>Message</th>
+    	</thead>
+    	<tbody>
+    		{% for row in data %}
+    		<tr>
+            <form>
+    			<td>{{row[0]}}</td>
+                </form>
+    		</tr>
+    		{% endfor %}
+    	</tbody>
+    </table>
+    <hr>
+<textarea action = "/chatview", method="POST"></textarea><br>
+<button name="send">SEND</button>
+</body>
+</html>
